@@ -10,7 +10,7 @@ using System.Text;
 
 namespace KiranaStore.Controllers
 {
-    [Authorize]
+
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase
@@ -24,7 +24,7 @@ namespace KiranaStore.Controllers
             _configuration = configuration;
         }
 
-        
+
         [AllowAnonymous]
         [HttpPost("Login")]
         public IActionResult Login([FromBody] LoginDto dto)
@@ -48,14 +48,14 @@ namespace KiranaStore.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 return Unauthorized(ex.Message);
             }
         }
 
 
-        
-        [AllowAnonymous]
+
+        [Authorize(Roles = "Admin")]
         [HttpPost("Register")]
         public IActionResult Register([FromBody] RegisterDto dto)
         {
