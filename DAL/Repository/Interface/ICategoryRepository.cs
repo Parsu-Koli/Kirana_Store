@@ -1,6 +1,6 @@
 ﻿using DAL.Models;
 
-namespace DAL.Repository.Interfaces
+namespace DAL.Repository.Interface
 {
     public interface ICategoryRepository
     {
@@ -9,6 +9,8 @@ namespace DAL.Repository.Interfaces
         void Add(Category category);
         void Update(Category category);
         void Delete(int id);
+
+        List<Product> GetProductsByCategory(int Id);
 
         bool IsCategoryNameExists(string name);
     }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 
-namespace KiaranaStroreUI.Controllers
+namespace KiranaStoreUI.Controllers
 {
     public class CustomerController(IHttpClientFactory factory) : Controller
     {

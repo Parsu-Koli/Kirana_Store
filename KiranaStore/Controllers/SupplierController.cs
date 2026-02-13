@@ -6,14 +6,9 @@ namespace KiranaStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SupplierController : ControllerBase
+    public class SupplierController(SupplierService supplierService) : ControllerBase
     {
-        private readonly SupplierService _supplierService;
-
-        public SupplierController(SupplierService supplierService)
-        {
-            _supplierService = supplierService;
-        }
+        private readonly SupplierService _supplierService = supplierService;
 
         [HttpPost("Add")]
         public IActionResult Add(Supplier s)

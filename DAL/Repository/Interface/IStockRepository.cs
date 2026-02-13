@@ -1,7 +1,7 @@
 ﻿using DAL.Models;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace DAL.Repository.Interfaces
+namespace DAL.Repository.Interface
 {
     public interface IStockRepository
     {

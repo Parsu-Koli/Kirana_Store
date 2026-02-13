@@ -7,14 +7,9 @@ using System.Linq;
 
 namespace DAL.Repository.Implementation
 {
-    public class SaleRepository : ISaleRepository
+    public class SaleRepository(AppDbContext context) : ISaleRepository
     {
-        private readonly AppDbContext _context;
-
-        public SaleRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public void Add(Sale sale)
         {

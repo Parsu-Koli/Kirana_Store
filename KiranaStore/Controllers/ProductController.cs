@@ -3,19 +3,14 @@ using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace KiranaStore.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductController(ProductService productService) : ControllerBase
     {
-        private readonly ProductService _productService;
-
-        public ProductController(ProductService productService)
-        {
-            _productService = productService;
-        }
+        private readonly ProductService _productService = productService;
 
         [HttpPost("AddProduct")]
         public IActionResult AddProduct(Product product)

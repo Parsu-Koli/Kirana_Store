@@ -10,18 +10,11 @@ namespace KiranaStore.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class SaleController : ControllerBase
+    public class SaleController(SaleService saleService, ProductService productService) : ControllerBase
     {
-        private readonly SaleService _saleService;
-        private readonly ProductService _productService;
+        private readonly SaleService _saleService = saleService;
+        private readonly ProductService _productService = productService;
 
-        public SaleController(SaleService saleService, ProductService productService)
-        {
-            _saleService = saleService;
-            _productService = productService;
-        }
-
-        
         [HttpGet("SearchProducts")]
         public IActionResult SearchProducts(string keyword)
         {

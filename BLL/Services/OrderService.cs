@@ -1,5 +1,5 @@
 ﻿using DAL.Models;
-using DAL.Repository.Interfaces;
+using DAL.Repository.Interface;
 
 namespace BLL.Services
 {

@@ -1,19 +1,15 @@
 ﻿using DAL.Data;
 using DAL.Models;
+using DAL.Repository.Interface;
 using DAL.Repository.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DAL.Repository.Implimentation
 {
-    public class OrderItemRepository : IOrderItemRepository
+    public class OrderItemRepository(AppDbContext context) : IOrderItemRepository
     {
-        private readonly AppDbContext _context;
-
-        public OrderItemRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public void Add(OrderItem item)
         {

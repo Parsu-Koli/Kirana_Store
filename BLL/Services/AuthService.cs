@@ -1,16 +1,10 @@
 ﻿using DAL.Models;
-using DAL.Repository.Interfaces;
-
+using DAL.Repository.Interface;
 namespace BLL.Services
 {
-    public class AuthService
+    public class AuthService(IAuthRepository authRepo)
     {
-        private readonly IAuthRepository _authRepo;
-
-        public AuthService(IAuthRepository authRepo)
-        {
-            _authRepo = authRepo;
-        }
+        private readonly IAuthRepository _authRepo = authRepo;
 
         public User Login(string username, string password)
         {

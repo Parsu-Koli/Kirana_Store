@@ -1,18 +1,11 @@
 ﻿using DAL.Data;
 using DAL.Models;
-using DAL.Repository.Interfaces;
-using System.Linq;
-
+using DAL.Repository.Interface;
 namespace DAL.Repository.Implimentation
 {
-    public class AuthRepository : IAuthRepository
+    public class AuthRepository(AppDbContext context) : IAuthRepository
     {
-        private readonly AppDbContext _context;
-
-        public AuthRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public User Login(string username, string password)
         {

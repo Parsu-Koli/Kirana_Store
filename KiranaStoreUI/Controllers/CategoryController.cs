@@ -1,8 +1,6 @@
 ﻿using KiranaStoreUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
-using System.Net.Http.Json;
-
 namespace KiranaStoreUI.Controllers
 {
    
@@ -76,6 +74,8 @@ namespace KiranaStoreUI.Controllers
             return View(model);
         }
 
+
+
         // GET: Category/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
@@ -105,5 +105,16 @@ namespace KiranaStoreUI.Controllers
             var category = await _client.GetFromJsonAsync<Category>($"Category/GetCategory/{id}");
             return View(category);
         }
+
+        public async Task<IActionResult> All_productByID(int id)
+        {
+            AddJwtToken();
+
+            var products = await _client
+                .GetFromJsonAsync<List<Product>>($"Category/GetAllProductsById/{id}");
+
+            return View(products);
+        }
+
     }
 }

@@ -1,19 +1,14 @@
 ﻿using DAL.Models;
-using DAL.Repository.Interfaces;
+using DAL.Repository.Interface;
+
 
 namespace BLL.Services
 {
-    public class OrderItemService
+    public class OrderItemService(IOrderItemRepository orderItemRepo,
+                            IStockRepository stockRepo)
     {
-        private readonly IOrderItemRepository _orderItemRepo;
-        private readonly IStockRepository _stockRepo;
-
-        public OrderItemService(IOrderItemRepository orderItemRepo,
-                                IStockRepository stockRepo)
-        {
-            _orderItemRepo = orderItemRepo;
-            _stockRepo = stockRepo;
-        }
+        private readonly IOrderItemRepository _orderItemRepo = orderItemRepo;
+        private readonly IStockRepository _stockRepo = stockRepo;
 
         public void AddOrderItem(OrderItem item)
         {

@@ -13,17 +13,10 @@ namespace KiranaStore.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(AuthService authService, IConfiguration configuration) : ControllerBase
     {
-        private readonly AuthService _authService;
-        private readonly IConfiguration _configuration;
-
-        public AuthController(AuthService authService, IConfiguration configuration)
-        {
-            _authService = authService;
-            _configuration = configuration;
-        }
-
+        private readonly AuthService _authService = authService;
+        private readonly IConfiguration _configuration = configuration;
 
         [AllowAnonymous]
         [HttpPost("Login")]

@@ -1,18 +1,11 @@
 ﻿using DAL.Data;
 using DAL.Models;
-using DAL.Repository.Interfaces;
-
-
-namespace DAL.Repository.Implementation
+using DAL.Repository.Interface;
+namespace DAL.Repository.Implimentation
 {
-    public class CustomerRepository : ICustomerRepository
+    public class CustomerRepository(AppDbContext context) : ICustomerRepository
     {
-        private readonly AppDbContext _context;
-
-        public CustomerRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public void Add(Customer customer)
         {
@@ -43,7 +36,7 @@ namespace DAL.Repository.Implementation
 
         public IEnumerable<Customer> GetAll()
         {
-            return [.. _context.Customers];
+            return _context.Customers.ToList();
         }
     }
 }

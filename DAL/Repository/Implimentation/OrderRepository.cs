@@ -1,20 +1,15 @@
 ﻿using DAL.Data;
 using DAL.Models;
-using DAL.Repository.Interfaces;
+using DAL.Repository.Interface;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DAL.Repository.Implimentation
 {
-    public class OrderRepository : IOrderRepository
+    public class OrderRepository(AppDbContext context) : IOrderRepository
     {
-        private readonly AppDbContext _context;
-
-        public OrderRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public void Add(Order order)
         {
@@ -31,12 +26,12 @@ namespace DAL.Repository.Implimentation
 
         public IEnumerable<Order> GetAll()
         {
-            return _context.Orders.ToList();
+            return [.. _context.Orders];
         }
             
         public IEnumerable<Order> GetOrdersByDate(DateTime date)
         {
-            return _context.Orders.Where(x => x.OrderDate.Date == date.Date).ToList();
+            return [.. _context.Orders.Where(x => x.OrderDate.Date == date.Date)];
         }
 
         public void Update(Order order)

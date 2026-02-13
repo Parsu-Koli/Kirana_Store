@@ -5,16 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DAL.Repository.Implementation
+namespace DAL.Repository.Implimentation
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository(AppDbContext context) : IProductRepository
     {
-        private readonly AppDbContext _context;
-
-        public ProductRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public void Add(Product product)
         {

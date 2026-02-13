@@ -3,19 +3,14 @@ using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace WebApi.Controllers
+namespace KiranaStore.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class StockController : ControllerBase
+    public class StockController(StockService stockService) : ControllerBase
     {
-        private readonly StockService _stockService;
-
-        public StockController(StockService stockService)
-        {
-            _stockService = stockService;
-        }
+        private readonly StockService _stockService = stockService;
 
         [HttpPost("IncreaseStock")]
         public IActionResult IncreaseStock(int productId, decimal qty)

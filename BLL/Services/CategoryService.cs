@@ -1,16 +1,11 @@
 ﻿using DAL.Models;
-using DAL.Repository.Interfaces;
+using DAL.Repository.Interface;
 
 namespace BLL.Services
 {
-    public class CategoryService
+    public class CategoryService(ICategoryRepository categoryRepo)
     {
-        private readonly ICategoryRepository _categoryRepo;
-
-        public CategoryService(ICategoryRepository categoryRepo)
-        {
-            _categoryRepo = categoryRepo;
-        }
+        private readonly ICategoryRepository _categoryRepo = categoryRepo;
 
         public void AddCategory(Category category)
         {
@@ -50,6 +45,11 @@ namespace BLL.Services
         public IEnumerable<Category> GetAllCategories()
         {
             return _categoryRepo.GetAll();
+        }
+
+        public List<Product> GetProductById(int id)
+        {
+            return _categoryRepo.GetProductsByCategory(id);
         }
     }
 }

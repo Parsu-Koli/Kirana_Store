@@ -6,14 +6,9 @@ namespace KiranaStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentController : ControllerBase
+    public class PaymentController(PaymentService service) : ControllerBase
     {
-        private readonly PaymentService _service;
-
-        public PaymentController(PaymentService service)
-        {
-            _service = service;
-        }
+        private readonly PaymentService _service = service;
 
         [HttpPost("AddPayment")]
         public IActionResult AddPayment(Payment payment)

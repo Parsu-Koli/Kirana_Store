@@ -6,14 +6,9 @@ namespace KiranaStore.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PurchaseItemController : ControllerBase
+    public class PurchaseItemController(PurchaseItemService service) : ControllerBase
     {
-        private readonly PurchaseItemService _service;
-
-        public PurchaseItemController(PurchaseItemService service)
-        {
-            _service = service;
-        }
+        private readonly PurchaseItemService _service = service;
 
         [HttpPost("Add")]
         public IActionResult Add(PurchaseItem item)

@@ -1,16 +1,10 @@
 ﻿using DAL.Models;
-using DAL.Repository.Interfaces;
-
+using DAL.Repository.Interface;
 namespace BLL.Services
 {
-    public class CustomerService
+    public class CustomerService(ICustomerRepository custRepo)
     {
-        private readonly ICustomerRepository _custRepo;
-
-        public CustomerService(ICustomerRepository custRepo)
-        {
-            _custRepo = custRepo;
-        }
+        private readonly ICustomerRepository _custRepo = custRepo;
 
         public void AddCustomer(Customer customer)
         {

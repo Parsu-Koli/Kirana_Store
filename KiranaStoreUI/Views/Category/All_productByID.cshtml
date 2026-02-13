@@ -1,0 +1,124 @@
+﻿@model List<KiranaStoreUI.Models.Product>
+
+@{
+    var categoryName = Model?.FirstOrDefault()?.CategoryName ?? "Category";
+    var categoryId = Model?.FirstOrDefault()?.CategoryId ?? 0;
+}
+
+<div class="container my-4">
+
+    <!-- Top Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h4 class="fw-bold text-primary mb-1">
+                @categoryName
+            </h4>
+            <small class="text-muted">
+                Category ID: @categoryId
+            </small>
+        </div>
+
+        <div class="col-md-4">
+            <input type="text"
+                   id="searchBox"
+                   placeholder="Search Products..."
+                   class="form-control form-control-lg shadow-sm" />
+        </div>
+
+        
+    </div>
+
+    <hr />
+
+    <h5 class="fw-bold text-success mb-3">
+        Products (@Model.Count)
+    </h5>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            No products found in this category.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4" id="productContainer">
+            @foreach (var item in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 product-wrapper">
+
+                    <a asp-controller="Product"
+                       asp-action="Details"
+                       asp-route-id="@item.ProductId"
+                       class="text-decoration-none text-dark">
+
+                        <div class="card product-card h-100 shadow-sm border-0 rounded-4">
+
+                            <div class="card-body p-3">
+
+                                <h5 class="card-title fw-bold product-title">
+                                    @item.ProductName
+                                </h5>
+
+                                <p class="small mb-2">
+                                    Unit:
+                                    <strong>@item.Unit</strong>
+                                </p>
+
+                                <p class="fw-bold text-success mb-2">
+                                    ₹ @item.SellingPrice
+                                </p>
+
+                                <p class="small text-secondary mb-0">
+                                    Stock:
+                                    <strong>@item.QuantityInStock</strong>
+                                </p>
+
+                            </div>
+
+                        </div>
+                    </a>
+
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+<style>
+    .product-card {
+        transition: 0.25s ease-in-out;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background-color: white;
+        cursor: pointer;
+    }
+
+        .product-card:hover {
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.18);
+            transform: translateY(-8px);
+        }
+
+    .product-title {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    #searchBox {
+        border-radius: 8px;
+        border: 1px solid #c9e6d2;
+    }
+</style>
+
+<script>
+    document.getElementById("searchBox").addEventListener("keyup", function () {
+        var searchText = this.value.toLowerCase();
+        var cards = document.querySelectorAll(".product-wrapper");
+
+        cards.forEach(function (card) {
+            var text = card.innerText.toLowerCase();
+            card.style.display = text.includes(searchText) ? "" : "none";
+        });
+    });
+</script>

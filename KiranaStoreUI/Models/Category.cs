@@ -9,6 +9,7 @@
 
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KiranaStoreUI.Models
 {
@@ -21,5 +22,8 @@ namespace KiranaStoreUI.Models
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Category name can only contain letters and spaces")]
         [StringLength(100, ErrorMessage = "Category name cannot exceed 100 characters")]
         public string CategoryName { get; set; }
+
+        [NotMapped]
+        public ICollection<Product>? Products { get; set; }
     }
 }

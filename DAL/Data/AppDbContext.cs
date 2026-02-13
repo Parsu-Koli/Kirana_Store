@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
 
         // ------------------- USERS -------------------
         public DbSet<User> Users { get; set; }
@@ -68,7 +64,7 @@ namespace DAL.Data
 
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Category)
-                .WithMany()
+                .WithMany(c => c.Products)
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
 

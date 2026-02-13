@@ -8,14 +8,9 @@ namespace KiranaStore.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderItemController : ControllerBase
+    public class OrderItemController(OrderItemService service) : ControllerBase
     {
-        private readonly OrderItemService _service;
-
-        public OrderItemController(OrderItemService service)
-        {
-            _service = service;
-        }
+        private readonly OrderItemService _service = service;
 
         [HttpPost("Add")]
         public IActionResult Add(OrderItem item)

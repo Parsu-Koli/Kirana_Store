@@ -2,20 +2,16 @@
 using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace WebApi.Controllers
+namespace KiranaStore.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController(CategoryService categoryService) : ControllerBase
     {
-        private readonly CategoryService _categoryService;
-
-        public CategoryController(CategoryService categoryService)
-        {
-            _categoryService = categoryService;
-        }
+        private readonly CategoryService _categoryService = categoryService;
 
         [HttpPost("AddCategory")]
         public IActionResult AddCategory(Category c)
@@ -50,6 +46,14 @@ namespace WebApi.Controllers
         {
             _categoryService.DeleteCategory(id);
             return Ok("Category Deleted Successfully");
+        }
+
+        [HttpGet("GetAllProductsById/{id}")]
+        public IActionResult GetProductByCatagoryId(int id)
+        {
+             var data= _categoryService.GetProductById(id);
+            if (data == null) return NotFound("Category Not Found");
+            return Ok(data);
         }
     }
 }

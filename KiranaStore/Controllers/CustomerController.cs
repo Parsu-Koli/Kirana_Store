@@ -3,20 +3,14 @@ using BLL.Services;
 using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 
-namespace WebApi.Controllers
+namespace KiranaStore.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomerController : ControllerBase
+    public class CustomerController(CustomerService customerService) : ControllerBase
     {
-        private readonly CustomerService _customerService;
-
-        public CustomerController(CustomerService customerService)
-        {
-            _customerService = customerService;
-        }
-
+        private readonly CustomerService _customerService = customerService;
 
         [HttpPost("AddCustomer")]
         public IActionResult AddCustomer(Customer c)

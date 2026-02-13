@@ -1,6 +1,6 @@
 ﻿using DAL.Models;
 
-namespace DAL.Repository.Interfaces
+namespace DAL.Repository.Interface
 {
     public interface IPaymentRepository
     {
