@@ -27,10 +27,16 @@ namespace KiranaStoreUI.Controllers
             return client;
         }
 
+//testing
+        // public IActionResult Login()
+        // {
+        //     return View();
+        // }
+        [HttpGet]
         public IActionResult Login()
-        {
-            return View();
-        }
+             {
+               return Content("Login Route Working Successfully");
+          }
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel model)
