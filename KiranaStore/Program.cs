@@ -161,6 +161,7 @@ namespace KiranaStore
 
             // 🔴 ORDER IS CORRECT (do not change)
             app.UseAuthentication();
+            app.UseCors("AllowMVC");
             app.UseAuthorization();
 
             app.MapControllers();
