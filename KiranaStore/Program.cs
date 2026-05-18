@@ -135,6 +135,17 @@ namespace KiranaStore
 
             builder.Services.AddAuthorization();
 
+            builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMVC",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
             var app = builder.Build();
 
             // if (app.Environment.IsDevelopment())
