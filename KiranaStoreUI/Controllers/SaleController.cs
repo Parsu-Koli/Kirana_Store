@@ -145,29 +145,36 @@ public async Task<IActionResult> Create(SaleCustomerVM vm)
 {
     AddJwtToken();
 
-    // 🔥 Reload invoice if missing
+    // 🔥 Check Null
+    if (vm.Sale == null || vm.Customer == null)
+    {
+        ModelState.AddModelError("", "Sale or Customer data missing.");
+
+        ViewBag.NextInvoice =
+            await _client.GetStringAsync("Sale/GetNextInvoice");
+
+        await ReloadProducts(vm);
+
+        return View(vm);
+    }
+
+    // 🔥 Load Invoice if Empty
     if (string.IsNullOrEmpty(vm.Sale.InvoiceNumber))
     {
         vm.Sale.InvoiceNumber =
             await _client.GetStringAsync("Sale/GetNextInvoice");
     }
 
-    // 🔥 ALWAYS load products
+    // 🔥 Load Products
     var products =
-        await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts");
+        await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts")
+        ?? new List<Product>();
 
-    // 🔥 VALIDATION
-    if (vm.Sale == null || vm.Customer == null)
-    {
-        ModelState.AddModelError("", "Sale or Customer data missing.");
-        ViewBag.NextInvoice = vm.Sale?.InvoiceNumber;
-
-        await ReloadProducts(vm);
-        return View(vm);
-    }
-
-    // 🔥 FIX PRODUCT ITEMS
     decimal totalAmount = 0;
+
+    // =====================================================
+    // PRODUCT CALCULATION
+    // =====================================================
 
     if (vm.Sale.SaleItems != null)
     {
@@ -179,28 +186,30 @@ public async Task<IActionResult> Create(SaleCustomerVM vm)
             if (product == null)
                 continue;
 
-            // ✅ AUTO PRICE
+            // ✅ Auto Price
             item.Price = product.SellingPrice;
 
-            // ✅ TOTAL
+            // ✅ Total
             item.Total = item.Quantity * item.Price;
 
             totalAmount += item.Total;
 
-            // ✅ REMOVE CIRCULAR REFERENCES
+            // ✅ Prevent Circular Reference
             item.Product = null;
             item.Sale = null;
         }
     }
 
-    // 🔥 SALE TOTALS
+    // =====================================================
+    // SALE TOTALS
+    // =====================================================
+
     vm.Sale.TotalAmount = totalAmount;
     vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
-    // vm.Sale.SaleDate = DateTime.Now;
     vm.Sale.SaleDate = DateTime.UtcNow;
 
     // =====================================================
-    // 1️⃣ CREATE CUSTOMER
+    // CREATE CUSTOMER
     // =====================================================
 
     var custResponse =
@@ -213,29 +222,30 @@ public async Task<IActionResult> Create(SaleCustomerVM vm)
         ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
 
         await ReloadProducts(vm);
+
         return View(vm);
     }
 
-            // ✅ SET BILL TOTALS
-            vm.Sale.TotalAmount = totalAmount;
-            vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
-            vm.Sale.SaleDate = DateTime.UtcNow;
+    // ✅ THIS WAS MISSING
+    var createdCustomer =
+        await custResponse.Content.ReadFromJsonAsync<Customer>();
 
-    if (createdCustomer == null)
+    if (createdCustomer == null || createdCustomer.CustomerId <= 0)
     {
-        ModelState.AddModelError("", "Customer response invalid.");
+        ModelState.AddModelError("", "Invalid customer returned from API.");
 
         ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
 
         await ReloadProducts(vm);
+
         return View(vm);
     }
 
-    // 🔥 ASSIGN CUSTOMER ID
+    // ✅ Assign CustomerId
     vm.Sale.CustomerId = createdCustomer.CustomerId;
 
     // =====================================================
-    // 2️⃣ CREATE SALE
+    // CREATE SALE
     // =====================================================
 
     var saleResponse =
@@ -249,20 +259,19 @@ public async Task<IActionResult> Create(SaleCustomerVM vm)
         return RedirectToAction("Index");
     }
 
-    // 🔥 READ ACTUAL ERROR FROM API
-    var errorMessage = await saleResponse.Content.ReadAsStringAsync();
+    // 🔥 API Error Message
+    var errorMessage =
+        await saleResponse.Content.ReadAsStringAsync();
 
     ModelState.AddModelError("",
         $"Sale creation failed : {errorMessage}");
 
     ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
 
-    // 🔥 RELOAD PRODUCTS AGAIN
     await ReloadProducts(vm);
 
     return View(vm);
 }
-
 
         // ---------------- SEARCH PRODUCT ----------------
         [HttpGet]
