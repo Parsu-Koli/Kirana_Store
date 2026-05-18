@@ -17,7 +17,7 @@ namespace BLL.Services
             if (purchase.SupplierId <= 0)
                 throw new Exception("Select supplier.");
 
-            purchase.PurchaseDate = DateTime.Now;
+            purchase.PurchaseDate = DateTime.UtcNow;
 
             _purchaseRepo.Add(purchase);
         }

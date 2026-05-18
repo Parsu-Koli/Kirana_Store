@@ -37,7 +37,7 @@ namespace DAL.Models
 
         public static ValidationResult? ValidateSaleDate(DateTime saleDate, ValidationContext context)
         {
-            if (saleDate > DateTime.Now)
+            if (saleDate > DateTime.UtcNow)
                 return new ValidationResult("Sale Date cannot be in the future");
             return ValidationResult.Success;
         }

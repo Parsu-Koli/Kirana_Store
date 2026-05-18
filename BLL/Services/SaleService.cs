@@ -24,7 +24,7 @@ namespace BLL.Services
             if (sale.SaleItems == null || sale.SaleItems.Count == 0)
                 throw new Exception("Add at least one product.");
 
-            sale.SaleDate = DateTime.Now;
+            sale.SaleDate = DateTime.UtcNow;
             sale.InvoiceNumber = GenerateInvoiceNumber();
 
             foreach (var item in sale.SaleItems)

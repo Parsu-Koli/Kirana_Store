@@ -20,7 +20,7 @@ namespace BLL.Services
             if (payment.AmountPaid <= 0)
                 throw new Exception("Invalid payment amount.");
 
-            payment.PaymentDate = DateTime.Now;
+            payment.PaymentDate = DateTime.UtcNow;
 
             _paymentRepo.Add(payment);
         }
