@@ -63,7 +63,7 @@ namespace KiranaStore.Controllers
                 Phone = dto.Phone,
                 Role = dto.Role,
                 IsActive = true,
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.UtcNow
             };
 
             try
@@ -96,7 +96,7 @@ namespace KiranaStore.Controllers
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(
+                expires: DateTime.UtcNow.AddMinutes(
                     Convert.ToDouble(_configuration["Jwt:ExpireMinutes"])),
                 signingCredentials: creds
             );

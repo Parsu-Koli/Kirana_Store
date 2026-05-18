@@ -38,7 +38,7 @@ namespace BLL.Services
             if (_authRepo.IsUsernameExists(user.Username))
                 throw new Exception("Username already exists.");
 
-            user.CreatedDate = DateTime.Now;
+            user.CreatedDate = DateTime.UtcNow;
             user.IsActive = true;
 
             _authRepo.AddUser(user);

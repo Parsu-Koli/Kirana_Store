@@ -32,7 +32,7 @@ namespace DAL.Models
         public int OrderId { get; set; }      // Primary Key
 
         [Required(ErrorMessage = "Order date is required")]
-        public DateTime OrderDate { get; set; } = DateTime.Now;
+        public DateTime OrderDate { get; set; } = DateTime.UtcNow;
 
         [Required(ErrorMessage = "Customer ID is required")]
         [Range(1, int.MaxValue, ErrorMessage = "Customer ID must be greater than 0")]

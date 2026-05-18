@@ -216,8 +216,10 @@ public async Task<IActionResult> Create(SaleCustomerVM vm)
         return View(vm);
     }
 
-    var createdCustomer =
-        await custResponse.Content.ReadFromJsonAsync<Customer>();
+            // ✅ SET BILL TOTALS
+            vm.Sale.TotalAmount = totalAmount;
+            vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
+            vm.Sale.SaleDate = DateTime.UtcNow;
 
     if (createdCustomer == null)
     {
