@@ -124,7 +124,7 @@ namespace KiranaStoreUI.Controllers
         //     // ✅ SET BILL TOTALS
         //     vm.Sale.TotalAmount = totalAmount;
         //     vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
-        //     vm.Sale.SaleDate = DateTime.Now;
+        //     vm.Sale.SaleDate = DateTime.UtcNow;
 
         //     // 3️⃣ Create Sale
         //     var saleResponse = await _client.PostAsJsonAsync("Sale/AddSale", vm.Sale);
@@ -196,7 +196,8 @@ public async Task<IActionResult> Create(SaleCustomerVM vm)
     // 🔥 SALE TOTALS
     vm.Sale.TotalAmount = totalAmount;
     vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
-    vm.Sale.SaleDate = DateTime.Now;
+    // vm.Sale.SaleDate = DateTime.Now;
+    vm.Sale.SaleDate = DateTime.UtcNow;
 
     // =====================================================
     // 1️⃣ CREATE CUSTOMER
