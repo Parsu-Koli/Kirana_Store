@@ -135,18 +135,33 @@ namespace KiranaStore
 
             builder.Services.AddAuthorization();
 
+            builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMVC",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
             var app = builder.Build();
 
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            // if (app.Environment.IsDevelopment())
+            // {
+            //     app.UseSwagger();
+            //     app.UseSwaggerUI();
+            // }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
             // 🔴 ORDER IS CORRECT (do not change)
             app.UseAuthentication();
+            app.UseCors("AllowMVC");
             app.UseAuthorization();
 
             app.MapControllers();
