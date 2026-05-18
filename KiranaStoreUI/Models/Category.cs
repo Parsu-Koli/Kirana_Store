@@ -19,7 +19,6 @@ namespace KiranaStoreUI.Models
         public int CategoryId { get; set; }
 
         [Required(ErrorMessage = "Category name is required")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Category name can only contain letters and spaces")]
         [StringLength(100, ErrorMessage = "Category name cannot exceed 100 characters")]
         public string CategoryName { get; set; }
 
