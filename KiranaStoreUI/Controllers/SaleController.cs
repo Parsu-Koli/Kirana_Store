@@ -55,7 +55,7 @@ namespace KiranaStoreUI.Controllers
                 Sale = new Sale
                 {
                     InvoiceNumber = nextInvoice,
-                    SaleDate = DateTime.Now,
+                    SaleDate = DateTime.UtcNow,
                     SaleItems = new List<SaleItem>()
                 },
                 Customer = new Customer()
