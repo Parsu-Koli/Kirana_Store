@@ -38,8 +38,8 @@ namespace KiranaStoreUI.Models
         [StringLength(20, ErrorMessage = "Invoice Number cannot exceed 20 characters")]
         public string InvoiceNumber { get; set; }
 
-        [Required(ErrorMessage = "Customer is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "CustomerId must be greater than 0")]
+        //[Required(ErrorMessage = "Customer is required")]
+        //[Range(1, int.MaxValue, ErrorMessage = "CustomerId must be greater than 0")]
         public int? CustomerId { get; set; }
 
         [Required(ErrorMessage = "Total Amount is required")]
