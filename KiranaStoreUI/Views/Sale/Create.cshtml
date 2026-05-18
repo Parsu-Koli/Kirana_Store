@@ -100,6 +100,341 @@
 </div>
 
 <script>
+
+    const total = document.getElementById("total");
+    const discount = document.getElementById("discount");
+    const net = document.getElementById("net");
+
+    let selectedProducts = [];
+
+    // ================================
+    // DISCOUNT CALCULATION
+    // ================================
+    discount.addEventListener("input", () => {
+
+        const totalValue = parseFloat(total.value || 0);
+        const discountValue = parseFloat(discount.value || 0);
+
+        net.value = (totalValue - discountValue).toFixed(2);
+    });
+
+    // ================================
+    // SEARCH PRODUCT
+    // ================================
+    document.getElementById("productSearch")
+        .addEventListener("keyup", function () {
+
+        let keyword = this.value.trim();
+
+        // hide if small text
+        if (keyword.length < 2) {
+            document.getElementById("searchResult").style.display = "none";
+            return;
+        }
+
+        fetch(`/Sale/SearchProduct?keyword=${keyword}`)
+            .then(response => response.json())
+            .then(data => {
+
+                let box = document.getElementById("searchResult");
+
+                box.innerHTML = "";
+
+                // no products
+                if (!data.success || data.products.length === 0) {
+                    box.style.display = "none";
+                    return;
+                }
+
+                box.style.display = "block";
+
+                data.products.forEach(product => {
+
+                    box.innerHTML += `
+                        <a href="javascript:void(0)"
+                           class="list-group-item list-group-item-action"
+                           onclick="addProduct(
+                               ${product.productId},
+                               '${product.productName}',
+                               ${product.sellingPrice}
+                           )">
+
+                            <div class="d-flex justify-content-between">
+                                <span>${product.productName}</span>
+                                <strong>₹${product.sellingPrice}</strong>
+                            </div>
+
+                        </a>
+                    `;
+                });
+            });
+    });
+
+    // ================================
+    // ADD PRODUCT
+    // ================================
+    function addProduct(id, name, price) {
+
+        // already exists
+        let exists = selectedProducts.find(x => x.id === id);
+
+        if (exists) {
+            exists.qty += 1;
+        }
+        else {
+
+            selectedProducts.push({
+                id: id,
+                name: name,
+                price: price,
+                qty: 1,
+                unit: "Kg"
+            });
+        }
+
+        renderProducts();
+
+        document.getElementById("searchResult").style.display = "none";
+
+        document.getElementById("productSearch").value = "";
+    }
+
+    // ================================
+    // CALCULATE ITEM TOTAL
+    // ================================
+    function calculateItemTotal(product) {
+
+        let quantity = product.qty;
+
+        // convert gram to kg
+        if (product.unit === "Gram") {
+            quantity = quantity / 1000;
+        }
+
+        return quantity * product.price;
+    }
+
+    // ================================
+    // RENDER PRODUCTS
+    // ================================
+    function renderProducts() {
+
+        let ul = document.getElementById("selectedProducts");
+
+        ul.innerHTML = "";
+
+        let grandTotal = 0;
+
+        selectedProducts.forEach(product => {
+
+            let itemTotal = calculateItemTotal(product);
+
+            grandTotal += itemTotal;
+
+            ul.innerHTML += `
+
+                <li class="list-group-item">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h6 class="mb-1">${product.name}</h6>
+                            <small>₹${product.price} per Kg</small>
+                        </div>
+
+                        <button type="button"
+                                class="btn btn-danger btn-sm"
+                                onclick="removeProduct(${product.id})">
+
+                            X
+
+                        </button>
+
+                    </div>
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-4">
+
+                            <input type="number"
+                                   step="0.01"
+                                   min="0.01"
+                                   value="${product.qty}"
+                                   class="form-control"
+                                   onchange="changeQty(${product.id}, this.value)" />
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <select class="form-select"
+                                    onchange="changeUnit(${product.id}, this.value)">
+
+                                <option value="Kg"
+                                    ${product.unit === "Kg" ? "selected" : ""}>
+                                    Kg
+                                </option>
+
+                                <option value="Gram"
+                                    ${product.unit === "Gram" ? "selected" : ""}>
+                                    Gram
+                                </option>
+
+                                <option value="Pice"
+                                    ${product.unit === "Pice" ? "selected" : ""}>
+                                    Pice
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="col-md-4 text-end">
+
+                            <strong>
+                                ₹${itemTotal.toFixed(2)}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </li>
+            `;
+        });
+
+        total.value = grandTotal.toFixed(2);
+
+        const discountValue = parseFloat(discount.value || 0);
+
+        net.value = (grandTotal - discountValue).toFixed(2);
+    }
+
+    // ================================
+    // CHANGE QTY
+    // ================================
+    function changeQty(id, qty) {
+
+        let product = selectedProducts.find(x => x.id === id);
+
+        if (product) {
+
+            product.qty = parseFloat(qty || 1);
+
+            renderProducts();
+        }
+    }
+
+    // ================================
+    // CHANGE UNIT
+    // ================================
+    function changeUnit(id, unit) {
+
+        let product = selectedProducts.find(x => x.id === id);
+
+        if (product) {
+
+            product.unit = unit;
+
+            renderProducts();
+        }
+    }
+
+    // ================================
+    // REMOVE PRODUCT
+    // ================================
+    function removeProduct(id) {
+
+        selectedProducts =
+            selectedProducts.filter(x => x.id !== id);
+
+        renderProducts();
+    }
+
+    // ================================
+    // FORM SUBMIT
+    // ================================
+    document.getElementById("saleForm")
+        .addEventListener("submit", function (e) {
+
+        // stop if no product
+        if (selectedProducts.length === 0) {
+
+            alert("Please add at least one product");
+
+            e.preventDefault();
+
+            return;
+        }
+
+        // remove old hidden inputs
+        document.querySelectorAll(".sale-hidden")
+            .forEach(x => x.remove());
+
+        // create hidden inputs
+        selectedProducts.forEach((product, index) => {
+
+            let qty = product.qty;
+
+            // gram convert
+            if (product.unit === "Gram") {
+                qty = qty / 1000;
+            }
+
+            // total
+            let itemTotal = qty * product.price;
+
+            this.appendChild(
+                createHidden(
+                    `Sale.SaleItems[${index}].ProductId`,
+                    product.id
+                )
+            );
+
+            this.appendChild(
+                createHidden(
+                    `Sale.SaleItems[${index}].Quantity`,
+                    qty
+                )
+            );
+
+            this.appendChild(
+                createHidden(
+                    `Sale.SaleItems[${index}].Price`,
+                    product.price
+                )
+            );
+
+            this.appendChild(
+                createHidden(
+                    `Sale.SaleItems[${index}].Total`,
+                    itemTotal
+                )
+            );
+        });
+    });
+
+    // ================================
+    // CREATE HIDDEN INPUT
+    // ================================
+    function createHidden(name, value) {
+
+        let input = document.createElement("input");
+
+        input.type = "hidden";
+
+        input.name = name;
+
+        input.value = value;
+
+        input.classList.add("sale-hidden");
+
+        return input;
+    }
+
+</script>
+
+@* <script>
     const total = document.getElementById("total");
     const discount = document.getElementById("discount");
     const net = document.getElementById("net");
@@ -236,5 +571,5 @@
         i.value = v;
         return i;
     }
-</script>
+</script> *@
 
