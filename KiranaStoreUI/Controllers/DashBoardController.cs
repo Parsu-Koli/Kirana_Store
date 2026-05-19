@@ -24,150 +24,59 @@ namespace KiranaStoreUI.Controllers
         {
             AddJwtToken();
 
-            // =========================
-            // Get API Data
-            // =========================
+            // Fetch data from APIs
+            var allSales = await _client.GetFromJsonAsync<List<Sale>>("Sale/GetAllSales");
+            var products = await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts");
+            var customers = await _client.GetFromJsonAsync<List<Customer>>("Customer/GetCustomers");
 
-            var allSales =
-                await _client.GetFromJsonAsync<List<Sale>>("Sale/GetAllSales");
+            // Calculate metrics
+            var totalSalesAmount = allSales.Sum(s => s.NetAmount);
+            var totalSales = allSales.Count;
+            var totalCustomers = customers.Count;
+            var totalProfit = allSales.Sum(s => s.SaleItems?.Sum(i => (i.Price - products.FirstOrDefault(p => p.ProductId == i.ProductId)?.PurchasePrice ?? 0) * i.Quantity) ?? 0);
 
-            var products =
-                await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts");
+            // Sales overview (last 7 days)
+            var last7Days = Enumerable.Range(0, 7)
+                .Select(i => DateTime.Now.Date.AddDays(-i))
+                .OrderBy(d => d)
+                .ToList();
 
-            var customers =
-                await _client.GetFromJsonAsync<List<Customer>>("Customer/GetCustomers");
-
-            // =========================
-            // Product Dictionary
-            // =========================
-
-            var productDict = products.ToDictionary(p => p.ProductId);
-
-            // =========================
-            // Variables
-            // =========================
-
-            decimal totalProfit = 0;
-
-            decimal totalSalesAmount = 0;
-
-            int totalSales = allSales.Count;
-
-            int totalCustomers = customers.Count;
-
-            // =========================
-            // Date Calculation
-            // =========================
-
-            DateTime now = DateTime.Now;
-
-            DateTime currentMonthStart =
-                new DateTime(now.Year, now.Month, 1);
-
-            DateTime lastMonthStart =
-                currentMonthStart.AddMonths(-1);
-
-            DateTime lastMonthEnd =
-                currentMonthStart.AddDays(-1);
-
-            decimal currentMonthProfit = 0;
-
-            decimal lastMonthProfit = 0;
-
-            // =========================
-            // Profit Calculation
-            // =========================
-
-            foreach (var sale in allSales)
+            var salesOverview = last7Days.Select(date => new
             {
-                decimal purchaseTotal = 0;
+                Date = date.ToString("MMM dd"),
+                TotalSales = allSales.Where(s => s.SaleDate.Date == date).Sum(s => s.NetAmount)
+            }).ToList();
 
-                decimal sellingTotal = 0;
+            // Sales by payment mode
+            var salesByPaymentMode = allSales
+                .GroupBy(s => s.PaymentMode)
+                .Select(g => new { PaymentMode = g.Key, Count = g.Count() })
+                .ToList();
 
-                totalSalesAmount += sale.NetAmount;
+            // Recent sales
+            var recentSales = allSales
+    .OrderByDescending(s => s.SaleDate)
+    .Take(5)
+    .ToList();
 
-                if (sale.SaleItems != null)
-                {
-                    foreach (var item in sale.SaleItems)
-                    {
-                        if (productDict.TryGetValue(item.ProductId, out var product))
-                        {
-                            purchaseTotal +=
-                                product.PurchasePrice * item.Quantity;
-
-                            sellingTotal +=
-                                item.Price * item.Quantity;
-                        }
-                    }
-                }
-
-                decimal profit =
-                    sellingTotal - purchaseTotal - sale.Discount;
-
-                totalProfit += profit;
-
-                // Current Month Profit
-
-                if (sale.SaleDate >= currentMonthStart)
-                {
-                    currentMonthProfit += profit;
-                }
-
-                // Last Month Profit
-
-                if (sale.SaleDate >= lastMonthStart &&
-                    sale.SaleDate <= lastMonthEnd)
-                {
-                    lastMonthProfit += profit;
-                }
+            // Attach customer data manually
+            foreach (var sale in recentSales)
+            {
+                sale.Customer = customers
+                    .FirstOrDefault(c => c.CustomerId == sale.CustomerId);
             }
 
-            // =========================
-            // Growth Percentage
-            // =========================
-
-            decimal growthPercentage = 0;
-
-            if (lastMonthProfit > 0)
-            {
-                growthPercentage =
-                    ((currentMonthProfit - lastMonthProfit)
-                    / lastMonthProfit) * 100;
-            }
-
-            // =========================
-            // Business Status
-            // =========================
-
-            string businessStatus =
-                growthPercentage >= 0
-                ? "Business is Growing 📈"
-                : "Business is Decreasing 📉";
-
-            // =========================
-            // Send Data To View
-            // =========================
-
-            ViewBag.TotalProfit = Math.Round(totalProfit, 2);
-
-            ViewBag.TotalSalesAmount = Math.Round(totalSalesAmount, 2);
-
+            // Pass data to the view
+            ViewBag.TotalSalesAmount = totalSalesAmount;
             ViewBag.TotalSales = totalSales;
-
             ViewBag.TotalCustomers = totalCustomers;
-
-            ViewBag.GrowthPercentage =
-                Math.Round(growthPercentage, 2);
-
-            ViewBag.BusinessStatus = businessStatus;
-
-            ViewBag.CurrentMonthProfit =
-                Math.Round(currentMonthProfit, 2);
-
-            ViewBag.LastMonthProfit =
-                Math.Round(lastMonthProfit, 2);
+            ViewBag.TotalProfit = totalProfit;
+            ViewBag.SalesOverview = salesOverview;
+            ViewBag.SalesByPaymentMode = salesByPaymentMode;
+            ViewBag.RecentSales = recentSales;
 
             return View();
         }
     }
 }
+
