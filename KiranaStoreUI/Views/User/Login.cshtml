@@ -283,7 +283,12 @@
                     <div class="welcome-subtitle">
                         Login to continue your account
                     </div>
-
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger text-center">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
                     <!-- Validation -->
                     @if (!ViewData.ModelState.IsValid)
                     {

@@ -6,25 +6,18 @@ using System.Net.Http.Json;
 
 namespace KiranaStoreUI.Controllers
 {
-    public class SaleController(IHttpClientFactory factory) : Controller
+    public class SaleController(IHttpClientFactory httpClientFactory)
+    : BaseLoginController(httpClientFactory)
     {
-        private readonly HttpClient _client = factory.CreateClient("api");
+        
 
-        // ---------------- JWT Helper ----------------
-        private void AddJwtToken()
-        {
-            var token = HttpContext.Session.GetString("JWToken");
-            if (!string.IsNullOrEmpty(token))
-            {
-                _client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-            }
-        }
-
+       
         // ---------------- INDEX ----------------
         public async Task<IActionResult> Index()
         {
             AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
 
             var sales = await _client.GetFromJsonAsync<List<Sale>>("Sale/GetAllSales");
             var customers = await _client.GetFromJsonAsync<List<Customer>>("Customer/GetCustomers");
@@ -48,6 +41,9 @@ namespace KiranaStoreUI.Controllers
         public async Task<IActionResult> Create()
         {
             AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             string nextInvoice = await _client.GetStringAsync("Sale/GetNextInvoice");
 
             var vm = new SaleCustomerVM
@@ -144,9 +140,10 @@ namespace KiranaStoreUI.Controllers
 public async Task<IActionResult> Create(SaleCustomerVM vm)
 {
     AddJwtToken();
-
-    // 🔥 Check Null
-    if (vm.Sale == null || vm.Customer == null)
+            if (!AddJwtToken())
+                return RedirectToLogin();
+            // 🔥 Check Null
+            if (vm.Sale == null || vm.Customer == null)
     {
         ModelState.AddModelError("", "Sale or Customer data missing.");
 

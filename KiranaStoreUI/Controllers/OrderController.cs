@@ -1,16 +1,20 @@
-﻿using KiranaStoreUI.Models;
+﻿using KiranaStoreUI.Controllers;
+using KiranaStoreUI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Json;
 
 namespace KiaranaStroreUI.Controllers
 {
-    public class OrderController(IHttpClientFactory factory) : Controller
+    public class OrderController(IHttpClientFactory httpClientFactory)
+    : BaseLoginController(httpClientFactory)
     {
-        private readonly HttpClient _client = factory.CreateClient("api");
 
         // GET: Order
         public async Task<IActionResult> Index()
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var orders = await _client.GetFromJsonAsync<List<Order>>("Order/GetOrders");
             return View(orders);
         }
@@ -22,6 +26,9 @@ namespace KiaranaStroreUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Order model)
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -37,6 +44,9 @@ namespace KiaranaStroreUI.Controllers
         // GET: Order/Details/5
         public async Task<IActionResult> Details(int id)
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var order = await _client.GetFromJsonAsync<Order>($"Order/GetOrder/{id}");
             return View(order);
         }
@@ -44,6 +54,9 @@ namespace KiaranaStroreUI.Controllers
         // GET: Order/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var order = await _client.GetFromJsonAsync<Order>($"Order/GetOrder/{id}");
             return View(order);
         }
@@ -52,6 +65,9 @@ namespace KiaranaStroreUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Order model)
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -69,6 +85,9 @@ namespace KiaranaStroreUI.Controllers
         // GET: Order/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var order = await _client.GetFromJsonAsync<Order>($"Order/GetOrder/{id}");
             return View(order);
         }
@@ -77,6 +96,9 @@ namespace KiaranaStroreUI.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             // Your API does NOT have Delete endpoint → Add it OR disable delete.
             return RedirectToAction("Index");
         }
