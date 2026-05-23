@@ -4,24 +4,18 @@ using System.Net.Http.Headers;
 namespace KiranaStoreUI.Controllers
 {
    
-    public class CategoryController(IHttpClientFactory httpClientFactory) : Controller
+    public class CategoryController(IHttpClientFactory httpClientFactory)
+    : BaseLoginController(httpClientFactory)
     {
-        private readonly HttpClient _client = httpClientFactory.CreateClient("api");
-
-        private void AddJwtToken()
-        {
-            var token = HttpContext.Session.GetString("JWToken");
-            if (!string.IsNullOrEmpty(token))
-            {
-                _client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-            }
-        }
 
         // GET: Category
         public async Task<IActionResult> Index()
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var list = await _client.GetFromJsonAsync<List<Category>>("Category/GetCategories");
             return View(list);
         }
@@ -29,6 +23,9 @@ namespace KiranaStoreUI.Controllers
         // GET: Category/Create
         public IActionResult Create()
         {
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             return View();
         }
 
@@ -37,6 +34,10 @@ namespace KiranaStoreUI.Controllers
         public async Task<IActionResult> Create(Category model)
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -53,6 +54,10 @@ namespace KiranaStoreUI.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var category = await _client.GetFromJsonAsync<Category>($"Category/GetCategory/{id}");
             return View(category);
         }
@@ -80,6 +85,10 @@ namespace KiranaStoreUI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var category = await _client.GetFromJsonAsync<Category>($"Category/GetCategory/{id}");
             return View(category);
         }
@@ -89,6 +98,10 @@ namespace KiranaStoreUI.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var result = await _client.DeleteAsync($"Category/DeleteCategory/{id}");
 
             if (result.IsSuccessStatusCode)
@@ -102,6 +115,10 @@ namespace KiranaStoreUI.Controllers
         public async Task<IActionResult> Details(int id)
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             var category = await _client.GetFromJsonAsync<Category>($"Category/GetCategory/{id}");
             return View(category);
         }
@@ -109,6 +126,10 @@ namespace KiranaStoreUI.Controllers
         public async Task<IActionResult> All_productByID(int id)
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
 
             var products = await _client
                 .GetFromJsonAsync<List<Product>>($"Category/GetAllProductsById/{id}");

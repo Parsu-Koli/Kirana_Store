@@ -6,32 +6,20 @@ using System.Net.Http.Json;
 
 namespace KiranaStoreUI.Controllers
 {
-    public class ProductController : Controller
+    public class ProductController(IHttpClientFactory httpClientFactory)
+    : BaseLoginController(httpClientFactory)
     {
-        private readonly IHttpClientFactory _factory;
-
-        public ProductController(IHttpClientFactory factory)
-        {
-            _factory = factory;
-        }
-
-        // ✅ Helper: Creates HttpClient with JWT automatically
-        private HttpClient CreateClientWithToken()
-        {
-            var client = _factory.CreateClient("api");
-            var token = HttpContext.Session.GetString("JWToken");
-            if (!string.IsNullOrEmpty(token))
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
-            return client;
-        }
+      
 
         // LIST
         [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public async Task<IActionResult> Index()
         {
-            var client = CreateClientWithToken();
-            var data = await client.GetFromJsonAsync<List<Product>>("Product/GetProducts");
+            AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
+            var data = await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts");
             return View(data);
         }
 
@@ -39,8 +27,10 @@ namespace KiranaStoreUI.Controllers
         // DETAILS
         public async Task<IActionResult> Details(int id)
         {
-            var client = CreateClientWithToken();
-            var p = await client.GetFromJsonAsync<Product>($"Product/GetProduct/{id}");
+            AddJwtToken();
+                if (!AddJwtToken())
+                    return RedirectToLogin();
+            var p = await _client.GetFromJsonAsync<Product>($"Product/GetProduct/{id}");
             if (p == null) return NotFound();
             return View(p);
         }
@@ -48,6 +38,10 @@ namespace KiranaStoreUI.Controllers
         // CREATE (GET)
         public async Task<IActionResult> Create()
          {
+            AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             await LoadCategories();
             return View();
         }
@@ -56,14 +50,17 @@ namespace KiranaStoreUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product model)
         {
+            AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             if (!ModelState.IsValid)
             {
                 await LoadCategories();
                 return View(model);
             }
 
-            var client = CreateClientWithToken();
-            var result = await client.PostAsJsonAsync("Product/AddProduct", model);
+            var result = await _client.PostAsJsonAsync("Product/AddProduct", model);
 
             if (!result.IsSuccessStatusCode)
             {
@@ -78,8 +75,10 @@ namespace KiranaStoreUI.Controllers
         
         public async Task<IActionResult> Edit(int id)
         {
-            var client = CreateClientWithToken();
-            var p = await client.GetFromJsonAsync<Product>($"Product/GetProduct/{id}");
+            AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+            var p = await _client.GetFromJsonAsync<Product>($"Product/GetProduct/{id}");
             if (p == null) return NotFound();
 
             await LoadCategories();
@@ -90,14 +89,18 @@ namespace KiranaStoreUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Product model)
         {
+            AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
             if (!ModelState.IsValid)
             {
                 await LoadCategories();
                 return View(model);
             }
 
-            var client = CreateClientWithToken();
-            var result = await client.PutAsJsonAsync("Product/UpdateProduct", model);
+            
+            var result = await _client.PutAsJsonAsync("Product/UpdateProduct", model);
 
             if (result.IsSuccessStatusCode)
                 return RedirectToAction("Index");
@@ -110,8 +113,11 @@ namespace KiranaStoreUI.Controllers
         // DELETE (GET)
         public async Task<IActionResult> Delete(int id)
         {
-            var client = CreateClientWithToken();
-            var p = await client.GetFromJsonAsync<Product>($"Product/GetProduct/{id}");
+            AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+
+            var p = await _client.GetFromJsonAsync<Product>($"Product/GetProduct/{id}");
             if (p == null) return NotFound();
 
             return View(p);
@@ -121,16 +127,18 @@ namespace KiranaStoreUI.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var client = CreateClientWithToken();
-            await client.DeleteAsync($"Product/DeleteProduct/{id}");
+            AddJwtToken();
+            if (!AddJwtToken())
+                return RedirectToLogin();
+            await _client.DeleteAsync($"Product/DeleteProduct/{id}");
             return RedirectToAction("Index");
         }
 
         // Load categories
         private async Task LoadCategories()
         {
-            var client = CreateClientWithToken();
-            var categories = await client.GetFromJsonAsync<List<Category>>("Category/GetCategories");
+            
+            var categories = await _client.GetFromJsonAsync<List<Category>>("Category/GetCategories");
 
             ViewBag.Categories = categories.Select(c => new SelectListItem
             {

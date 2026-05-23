@@ -4,25 +4,19 @@ using System.Net.Http.Headers;
 
 namespace KiranaStoreUI.Controllers
 {
-    public class DashBoardController(IHttpClientFactory factory) : Controller
+    public class DashBoardController(IHttpClientFactory httpClientFactory)
+    : BaseLoginController(httpClientFactory)
     {
-        private readonly HttpClient _client = factory.CreateClient("api");
 
-        private void AddJwtToken()
-        {
-            var token = HttpContext.Session.GetString("JWToken");
-
-            if (!string.IsNullOrEmpty(token))
-            {
-                _client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-            }
-        }
+    
 
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
             AddJwtToken();
+
+            if (!AddJwtToken())
+                return RedirectToLogin();
 
             // Fetch data from APIs
             var allSales = await _client.GetFromJsonAsync<List<Sale>>("Sale/GetAllSales");
