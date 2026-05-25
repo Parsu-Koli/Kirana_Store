@@ -21,30 +21,30 @@
                         <h4 class="text-primary mb-3">Sale Details</h4>
 
                         <div class="mb-3">
-                            <label>Invoice Number</label>
+                            <label class="fw-bold">Invoice Number</label>
                             <input asp-for="Sale.InvoiceNumber" class="form-control" readonly />
                         </div>
 
                         <div class="mb-3">
-                            <label>Total Amount</label>
+                            <label class="fw-bold">Total Amount</label>
                             <input asp-for="Sale.TotalAmount" id="total"
                                    class="form-control text-end fw-bold" readonly />
                         </div>
 
                         <div class="mb-3">
-                            <label>Discount</label>
+                            <label class="fw-bold">Discount</label>
                             <input asp-for="Sale.Discount" id="discount"
                                    class="form-control text-end" />
                         </div>
 
                         <div class="mb-3">
-                            <label>Net Amount</label>
+                            <label class="fw-bold">Net Amount</label>
                             <input asp-for="Sale.NetAmount" id="net"
                                    class="form-control fw-bold text-success text-end" readonly />
                         </div>
 
                         <div class="mb-3">
-                            <label>Payment Mode</label>
+                            <label class="fw-bold">Payment Mode</label>
                             <select asp-for="Sale.PaymentMode" class="form-select">
                                 <option>Cash</option>
                                 <option>UPI</option>
@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Sale Date</label>
+                            <label class="fw-bold">Sale Date</label>
                             <input asp-for="Sale.SaleDate" type="date" class="form-control" />
                         </div>
                     </div>
@@ -64,21 +64,85 @@
                         <h4 class="text-primary mb-3">Customer Details</h4>
 
                         <div class="mb-3">
-                            <label>Name</label>
-                            <input asp-for="Customer.Name" class="form-control" />
+
+                            <label class="form-label fw-bold">
+                                Customer Name
+                            </label>
+
+                            <div class="input-group shadow-sm">
+
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-person-fill text-primary"></i>
+                                </span>
+
+                                <input asp-for="Customer.Name"
+                                       id="customerName"
+                                       class="form-control border-start-0 border-end-0 shadow-none"
+                                       placeholder="Enter or speak customer name" />
+
+                                <button type="button"
+                                        class="input-group-text bg-white border-start-0 text-danger"
+                                        onclick="startVoice()"
+                                        style="cursor:pointer;">
+
+                                    <i class="bi bi-mic-fill"></i>
+
+                                </button>
+
+                            </div>
+
+                            <span asp-validation-for="Customer.Name"
+                                  class="text-danger small">
+                            </span>
+
                         </div>
 
                         <div class="mb-3">
-                            <label>Phone</label>
-                            <input asp-for="Customer.Phone" class="form-control" />
+
+                            <label class="form-label fw-bold">
+                                Phone Number
+                            </label>
+
+                            <div class="input-group shadow-sm">
+
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-telephone-fill text-success"></i>
+                                </span>
+
+                                <input asp-for="Customer.Phone"
+                                       class="form-control border-start-0 shadow-none"
+                                       placeholder="Enter customer phone number" />
+
+                            </div>
+
+                            <span asp-validation-for="Customer.Phone"
+                                  class="text-danger small">
+                            </span>
+
                         </div>
 
                         <hr />
 
-                        <label>Search Product</label>
-                        <input type="text" id="productSearch"
-                               class="form-control"
-                               placeholder="Type product name..." />
+                        <div class="mb-3">
+
+                            <label class="form-label fw-bold">
+                                Search Product
+                            </label>
+
+                            <div class="input-group shadow-sm">
+
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search text-primary"></i>
+                                </span>
+
+                                <input type="text"
+                                       id="productSearch"
+                                       class="form-control border-start-0 shadow-none"
+                                       placeholder="Search product name..." />
+
+                            </div>
+
+                        </div>
 
                         <div id="searchResult"
                              class="list-group mt-2"
@@ -232,76 +296,104 @@
 
             grandTotal += itemTotal;
 
-            ul.innerHTML += `
+                ul.innerHTML += `
 
-                <li class="list-group-item">
+    <li class="list-group-item shadow-sm border-0 mb-3 rounded">
 
-                    <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
 
-                        <div>
-                            <h6 class="mb-1">${product.name}</h6>
-                            <small>₹${product.price} per Kg</small>
-                        </div>
+            <div>
+                <h6 class="mb-1 fw-bold">
+                    ${product.name}
+                </h6>
 
-                        <button type="button"
-                                class="btn btn-danger btn-sm"
-                                onclick="removeProduct(${product.id})">
+                <small class="text-muted">
+                    ₹${product.price}
+                </small>
+            </div>
 
-                            X
+            <button type="button"
+                    class="btn btn-outline-danger btn-sm rounded-circle"
+                    onclick="removeProduct(${product.id})">
 
-                        </button>
+                <i class="bi bi-trash"></i>
 
-                    </div>
+            </button>
 
-                    <div class="row mt-3">
+        </div>
 
-                        <div class="col-md-4">
+        <div class="row mt-3 align-items-center">
 
-                            <input type="number"
-                                   step="0.01"
-                                   min="0.01"
-                                   value="${product.qty}"
-                                   class="form-control"
-                                   onchange="changeQty(${product.id}, this.value)" />
+            <!-- Quantity Buttons -->
 
-                        </div>
+            <div class="col-md-6">
 
-                        <div class="col-md-4">
+                <div class="d-flex align-items-center gap-2">
 
-                            <select class="form-select"
-                                    onchange="changeUnit(${product.id}, this.value)">
+                    <button type="button"
+                            class="btn btn-outline-secondary btn-sm"
+                            onclick="decreaseQty(${product.id})">
 
-                                <option value="Kg"
-                                    ${product.unit === "Kg" ? "selected" : ""}>
-                                    Kg
-                                </option>
+                        <i class="bi bi-dash-lg"></i>
 
-                                <option value="Gram"
-                                    ${product.unit === "Gram" ? "selected" : ""}>
-                                    Gram
-                                </option>
+                    </button>
 
-                                <option value="Pice"
-                                    ${product.unit === "Pice" ? "selected" : ""}>
-                                    Pice
-                                </option>
+                    <span class="fw-bold fs-5 px-2">
+                        ${product.qty}
+                    </span>
 
-                            </select>
+                    <button type="button"
+                            class="btn btn-outline-success btn-sm"
+                            onclick="increaseQty(${product.id})">
 
-                        </div>
+                        <i class="bi bi-plus-lg"></i>
 
-                        <div class="col-md-4 text-end">
+                    </button>
 
-                            <strong>
-                                ₹${itemTotal.toFixed(2)}
-                            </strong>
+                </div>
 
-                        </div>
+            </div>
 
-                    </div>
+            <!-- Unit -->
 
-                </li>
-            `;
+            <div class="col-md-3">
+
+                <select class="form-select form-select-sm"
+                        onchange="changeUnit(${product.id}, this.value)">
+
+                    <option value="Kg"
+                        ${product.unit === "Kg" ? "selected" : ""}>
+                        Kg
+                    </option>
+
+                    <option value="Gram"
+                        ${product.unit === "Gram" ? "selected" : ""}>
+                        Gram
+                    </option>
+
+                    <option value="Pice"
+                        ${product.unit === "Pice" ? "selected" : ""}>
+                        Piece
+                    </option>
+
+                </select>
+
+            </div>
+
+            <!-- Total -->
+
+            <div class="col-md-3 text-end">
+
+                <strong class="text-success">
+                    ₹${itemTotal.toFixed(2)}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </li>
+    `;
         });
 
         total.value = grandTotal.toFixed(2);
@@ -310,46 +402,28 @@
 
         net.value = (grandTotal - discountValue).toFixed(2);
     }
-
-    // ================================
-    // CHANGE QTY
-    // ================================
-    function changeQty(id, qty) {
+        function increaseQty(id) {
 
         let product = selectedProducts.find(x => x.id === id);
 
         if (product) {
 
-            product.qty = parseFloat(qty || 1);
+            product.qty += 1;
 
             renderProducts();
         }
     }
 
-    // ================================
-    // CHANGE UNIT
-    // ================================
-    function changeUnit(id, unit) {
+    function decreaseQty(id) {
 
         let product = selectedProducts.find(x => x.id === id);
 
-        if (product) {
+        if (product && product.qty > 1) {
 
-            product.unit = unit;
+            product.qty -= 1;
 
             renderProducts();
         }
-    }
-
-    // ================================
-    // REMOVE PRODUCT
-    // ================================
-    function removeProduct(id) {
-
-        selectedProducts =
-            selectedProducts.filter(x => x.id !== id);
-
-        renderProducts();
     }
 
     // ================================
@@ -431,6 +505,40 @@
         input.classList.add("sale-hidden");
 
         return input;
+    }
+
+        function startVoice() {
+
+        // browser support
+        const SpeechRecognition =
+            window.SpeechRecognition ||
+            window.webkitSpeechRecognition;
+
+        if (!SpeechRecognition) {
+
+            alert("Speech Recognition not supported");
+
+            return;
+        }
+
+        const recognition = new SpeechRecognition();
+
+        recognition.lang = "en-IN";
+
+        recognition.start();
+
+        recognition.onresult = function (event) {
+
+            let text =
+                event.results[0][0].transcript;
+
+            document.getElementById("customerName").value = text;
+        };
+
+        recognition.onerror = function () {
+
+            alert("Voice recognition failed");
+        };
     }
 
 </script>
