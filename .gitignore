@@ -1,0 +1,39 @@
+# Build folders
+bin/
+obj/
+
+# Visual Studio files
+.vs/
+*.user
+*.suo
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# ASP.NET Core
+appsettings.Development.json
+
+# Logs
+*.log
+
+# Database files
+*.mdf
+*.ldf
+
+# NuGet packages
+packages/
+
+# Node modules (if React/Angular added later)
+node_modules/
+
+# Publish folder
+publish/
+
+# Temporary files
+*.tmp
+*.cache
+
+# OS files
+Thumbs.db
+.DS_Store
