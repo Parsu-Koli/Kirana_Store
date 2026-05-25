@@ -29,7 +29,7 @@ namespace KiranaStoreUI.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [HttpGet]
+        [AcceptVerbs("GET", "HEAD")]
         [Route("health")]
         public IActionResult Health()
         {
