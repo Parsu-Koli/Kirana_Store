@@ -2,10 +2,12 @@
 
 namespace KiranaStore.Controllers
 {
-    public class HealthController : Controller
+    [ApiController]
+    [Route("health")]
+    public class HealthController : ControllerBase
     {
         [HttpGet]
-        [Route("health")]
+        [HttpHead]
         public IActionResult Health()
         {
             return Ok("API Running");
