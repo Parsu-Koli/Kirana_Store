@@ -44,9 +44,16 @@
                 <div class="col-sm-8">@Model.QuantityInStock</div>
             </div>
 
-            <div class="row mb-4">
+            <div class="row mb-2">
                 <div class="col-sm-4 fw-bold text-secondary">Description:</div>
                 <div class="col-sm-8">@Model.Description</div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-sm-4 fw-bold text-secondary">Product Expiry Date:</div>
+                <div class="col-sm-8">
+                    @(Model.ExpiryDate?.ToString("dd-MM-yyyy"))
+                </div>
             </div>
 
         </div>

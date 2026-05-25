@@ -54,6 +54,13 @@
                         <input asp-for="QuantityInStock" class="form-control border-dark shadow-none" />
                     </div>
 
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Expiry Date</label>
+                        <input asp-for="ExpiryDate" type="date"
+                               class="form-control border-dark shadow-none" />
+                        <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                    </div>
+
                     <div class="col-12">
                         <label class="form-label fw-bold">Description</label>
                         <textarea asp-for="Description" class="form-control border-dark shadow-none"></textarea>

@@ -1,30 +1,4 @@
-﻿//using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-
-//namespace KiranaStoreUI.Models
-//{
-//    public class Sale
-//    {
-//        public int SaleId { get; set; }
-//        public string InvoiceNumber { get; set; }
-//        public int? CustomerId { get; set; }
-//        public decimal TotalAmount { get; set; }
-//        public decimal Discount { get; set; }
-//        public decimal NetAmount { get; set; }
-//        public string PaymentMode { get; set; }      // Cash, UPI, Card 
-//        public DateTime SaleDate { get; set; }
-
-
-//        [ValidateNever]
-//        public Customer Customer { get; set; }
-//        [ValidateNever]
-//        public Product Product { get; set; }
-//        [ValidateNever]
-//        public List<SaleItem>? SaleItems { get; set; }
-//    }
-//}
-
-
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel.DataAnnotations;
 
 namespace KiranaStoreUI.Models
@@ -38,8 +12,6 @@ namespace KiranaStoreUI.Models
         [StringLength(20, ErrorMessage = "Invoice Number cannot exceed 20 characters")]
         public string InvoiceNumber { get; set; }
 
-        //[Required(ErrorMessage = "Customer is required")]
-        //[Range(1, int.MaxValue, ErrorMessage = "CustomerId must be greater than 0")]
         public int? CustomerId { get; set; }
 
         [Required(ErrorMessage = "Total Amount is required")]
@@ -53,7 +25,7 @@ namespace KiranaStoreUI.Models
         public decimal NetAmount { get; set; }
 
         [Required(ErrorMessage = "Payment Mode is required")]
-        [RegularExpression("Cash|UPI|Card", ErrorMessage = "Payment Mode must be Cash, UPI, or Card")]
+        [RegularExpression("Cash|UPI|Card|Udari", ErrorMessage = "Payment Mode must be Cash, UPI, or Card")]
         public string PaymentMode { get; set; }
 
         [Required(ErrorMessage = "Sale Date is required")]
