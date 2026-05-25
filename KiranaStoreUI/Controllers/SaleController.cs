@@ -1,8 +1,6 @@
 ﻿using KiranaStoreUI.Models;
 using KiranaStoreUI.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 namespace KiranaStoreUI.Controllers
 {
@@ -61,214 +59,140 @@ namespace KiranaStoreUI.Controllers
             return View(vm);
         }
 
-        // [HttpPost]
-        // public async Task<IActionResult> Create(SaleCustomerVM vm)
-        // {
-        //     AddJwtToken();
-
-        //     if (vm.Sale == null || vm.Customer == null)
-        //     {
-        //         ModelState.AddModelError("", "Sale or Customer data is missing.");
-        //         return View(vm);
-        //     }
-
-        //     // 1️⃣ Create Customer
-        //     var custResponse = await _client.PostAsJsonAsync("Customer/AddCustomer", vm.Customer);
-        //     if (!custResponse.IsSuccessStatusCode)
-        //     {
-        //         ModelState.AddModelError("", "Customer creation failed.");
-        //         ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
-        //         return View(vm);
-        //     }
-
-        //     var createdCustomer = await custResponse.Content.ReadFromJsonAsync<Customer>();
-        //     if (createdCustomer == null || createdCustomer.CustomerId <= 0)
-        //     {
-        //         ModelState.AddModelError("", "Invalid customer data returned from server.");
-        //         ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
-        //         return View(vm);
-        //     }
-
-        //     vm.Sale.CustomerId = createdCustomer.CustomerId;
-
-        //     // 🔥 2️⃣ LOAD PRODUCTS ONCE
-        //     var products = await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts");
-
-        //     decimal totalAmount = 0;
-
-        //     if (vm.Sale.SaleItems != null)
-        //     {
-        //         foreach (var item in vm.Sale.SaleItems)
-        //         {
-        //             var product = products.FirstOrDefault(p => p.ProductId == item.ProductId);
-        //             if (product == null) continue;
-
-        //             // ✅ AUTO PRICE FROM PRODUCT
-        //             item.Price = product.SellingPrice;
-
-        //             // ✅ AUTO TOTAL = Quantity × Price
-        //             item.Total = item.Quantity * item.Price;
-
-        //             totalAmount += item.Total;
-
-        //             // prevent circular ref
-        //             item.Product = null;
-        //             item.Sale = null;
-        //         }
-        //     }
-
-        //     // ✅ SET BILL TOTALS
-        //     vm.Sale.TotalAmount = totalAmount;
-        //     vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
-        //     vm.Sale.SaleDate = DateTime.UtcNow;
-
-        //     // 3️⃣ Create Sale
-        //     var saleResponse = await _client.PostAsJsonAsync("Sale/AddSale", vm.Sale);
-        //     if (saleResponse.IsSuccessStatusCode)
-        //     {
-        //         TempData["SuccessMsg"] =
-        //             $"Sale created successfully! Invoice: {vm.Sale.InvoiceNumber}";
-        //         return RedirectToAction("Index");
-        //     }
-
-        //     ModelState.AddModelError("", "Sale creation failed.");
-        //     ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
-        //     return View(vm);
-        // }
 
         [HttpPost]
-public async Task<IActionResult> Create(SaleCustomerVM vm)
-{
-    AddJwtToken();
+        public async Task<IActionResult> Create(SaleCustomerVM vm)
+        {
+            AddJwtToken();
             if (!AddJwtToken())
                 return RedirectToLogin();
             // 🔥 Check Null
             if (vm.Sale == null || vm.Customer == null)
-    {
-        ModelState.AddModelError("", "Sale or Customer data missing.");
+            {
+                ModelState.AddModelError("", "Sale or Customer data missing.");
 
-        ViewBag.NextInvoice =
-            await _client.GetStringAsync("Sale/GetNextInvoice");
+                ViewBag.NextInvoice =
+                    await _client.GetStringAsync("Sale/GetNextInvoice");
 
-        await ReloadProducts(vm);
+                await ReloadProducts(vm);
 
-        return View(vm);
-    }
+                return View(vm);
+            }
 
-    // 🔥 Load Invoice if Empty
-    if (string.IsNullOrEmpty(vm.Sale.InvoiceNumber))
-    {
-        vm.Sale.InvoiceNumber =
-            await _client.GetStringAsync("Sale/GetNextInvoice");
-    }
+            // 🔥 Load Invoice if Empty
+            if (string.IsNullOrEmpty(vm.Sale.InvoiceNumber))
+            {
+                vm.Sale.InvoiceNumber =
+                    await _client.GetStringAsync("Sale/GetNextInvoice");
+            }
 
-    // 🔥 Load Products
-    var products =
-        await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts")
-        ?? new List<Product>();
+            // 🔥 Load Products
+            var products =
+                await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts")
+                ?? new List<Product>();
 
-    decimal totalAmount = 0;
+            decimal totalAmount = 0;
 
-    // =====================================================
-    // PRODUCT CALCULATION
-    // =====================================================
+            // =====================================================
+            // PRODUCT CALCULATION
+            // =====================================================
 
-    if (vm.Sale.SaleItems != null)
-    {
-        foreach (var item in vm.Sale.SaleItems)
-        {
-            var product =
-                products.FirstOrDefault(p => p.ProductId == item.ProductId);
+            if (vm.Sale.SaleItems != null)
+            {
+                foreach (var item in vm.Sale.SaleItems)
+                {
+                    var product =
+                        products.FirstOrDefault(p => p.ProductId == item.ProductId);
 
-            if (product == null)
-                continue;
+                    if (product == null)
+                        continue;
 
-            // ✅ Auto Price
-            item.Price = product.SellingPrice;
+                    // ✅ Auto Price
+                    item.Price = product.SellingPrice;
 
-            // ✅ Total
-            item.Total = item.Quantity * item.Price;
+                    // ✅ Total
+                    item.Total = item.Quantity * item.Price;
 
-            totalAmount += item.Total;
+                    totalAmount += item.Total;
 
-            // ✅ Prevent Circular Reference
-            item.Product = null;
-            item.Sale = null;
+                    // ✅ Prevent Circular Reference
+                    item.Product = null;
+                    item.Sale = null;
+                }
+            }
+
+            // =====================================================
+            // SALE TOTALS
+            // =====================================================
+
+            vm.Sale.TotalAmount = totalAmount;
+            vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
+            vm.Sale.SaleDate = DateTime.UtcNow;
+
+            // =====================================================
+            // CREATE CUSTOMER
+            // =====================================================
+
+            var custResponse =
+                await _client.PostAsJsonAsync("Customer/AddCustomer", vm.Customer);
+
+            if (!custResponse.IsSuccessStatusCode)
+            {
+                ModelState.AddModelError("", "Customer creation failed.");
+
+                ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
+
+                await ReloadProducts(vm);
+
+                return View(vm);
+            }
+
+            // ✅ THIS WAS MISSING
+            var createdCustomer =
+                await custResponse.Content.ReadFromJsonAsync<Customer>();
+
+            if (createdCustomer == null || createdCustomer.CustomerId <= 0)
+            {
+                ModelState.AddModelError("", "Invalid customer returned from API.");
+
+                ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
+
+                await ReloadProducts(vm);
+
+                return View(vm);
+            }
+
+            // ✅ Assign CustomerId
+            vm.Sale.CustomerId = createdCustomer.CustomerId;
+
+            // =====================================================
+            // CREATE SALE
+            // =====================================================
+
+            var saleResponse =
+                await _client.PostAsJsonAsync("Sale/AddSale", vm.Sale);
+
+            if (saleResponse.IsSuccessStatusCode)
+            {
+                TempData["SuccessMsg"] =
+                    $"Sale created successfully! Invoice: {vm.Sale.InvoiceNumber}";
+
+                return RedirectToAction("Index");
+            }
+
+            // 🔥 API Error Message
+            var errorMessage =
+                await saleResponse.Content.ReadAsStringAsync();
+
+            ModelState.AddModelError("",
+                $"Sale creation failed : {errorMessage}");
+
+            ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
+
+            await ReloadProducts(vm);
+
+            return View(vm);
         }
-    }
-
-    // =====================================================
-    // SALE TOTALS
-    // =====================================================
-
-    vm.Sale.TotalAmount = totalAmount;
-    vm.Sale.NetAmount = totalAmount - vm.Sale.Discount;
-    vm.Sale.SaleDate = DateTime.UtcNow;
-
-    // =====================================================
-    // CREATE CUSTOMER
-    // =====================================================
-
-    var custResponse =
-        await _client.PostAsJsonAsync("Customer/AddCustomer", vm.Customer);
-
-    if (!custResponse.IsSuccessStatusCode)
-    {
-        ModelState.AddModelError("", "Customer creation failed.");
-
-        ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
-
-        await ReloadProducts(vm);
-
-        return View(vm);
-    }
-
-    // ✅ THIS WAS MISSING
-    var createdCustomer =
-        await custResponse.Content.ReadFromJsonAsync<Customer>();
-
-    if (createdCustomer == null || createdCustomer.CustomerId <= 0)
-    {
-        ModelState.AddModelError("", "Invalid customer returned from API.");
-
-        ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
-
-        await ReloadProducts(vm);
-
-        return View(vm);
-    }
-
-    // ✅ Assign CustomerId
-    vm.Sale.CustomerId = createdCustomer.CustomerId;
-
-    // =====================================================
-    // CREATE SALE
-    // =====================================================
-
-    var saleResponse =
-        await _client.PostAsJsonAsync("Sale/AddSale", vm.Sale);
-
-    if (saleResponse.IsSuccessStatusCode)
-    {
-        TempData["SuccessMsg"] =
-            $"Sale created successfully! Invoice: {vm.Sale.InvoiceNumber}";
-
-        return RedirectToAction("Index");
-    }
-
-    // 🔥 API Error Message
-    var errorMessage =
-        await saleResponse.Content.ReadAsStringAsync();
-
-    ModelState.AddModelError("",
-        $"Sale creation failed : {errorMessage}");
-
-    ViewBag.NextInvoice = vm.Sale.InvoiceNumber;
-
-    await ReloadProducts(vm);
-
-    return View(vm);
-}
 
         // ---------------- SEARCH PRODUCT ----------------
         [HttpGet]
@@ -364,64 +288,6 @@ public async Task<IActionResult> Create(SaleCustomerVM vm)
 
             return View(vm);
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> Edit(SaleCustomerVM vm)
-        //{
-        //    AddJwtToken();
-
-        //    // ✅ FIX 1: If validation fails, reload products for view
-        //    if (!ModelState.IsValid)
-        //    {
-        //        // reload products so ProductName doesn't break in view
-        //        var products = await _client.GetFromJsonAsync<List<Product>>("Product/GetProducts");
-        //        var productDict = products.ToDictionary(p => p.ProductId);
-
-        //        if (vm.Sale?.SaleItems != null)
-        //        {
-        //            foreach (var item in vm.Sale.SaleItems)
-        //            {
-        //                if (productDict.TryGetValue(item.ProductId, out var prod))
-        //                    item.Product = prod;
-        //            }
-        //        }
-
-        //        return View(vm);
-        //    }
-
-        //    // 🔁 SAME LOGIC: prevent circular reference
-        //    if (vm.Sale.SaleItems != null)
-        //    {
-        //        foreach (var item in vm.Sale.SaleItems)
-        //            item.Sale = null;
-        //    }
-
-        //    // 1️⃣ SAME LOGIC: Update Customer
-        //    var customerResponse =
-        //        await _client.PutAsJsonAsync("Customer/UpdateCustomer", vm.Customer);
-
-        //    if (!customerResponse.IsSuccessStatusCode)
-        //    {
-        //        ModelState.AddModelError("", "Failed to update customer.");
-        //        return View(vm);
-        //    }
-
-        //    // 2️⃣ SAME LOGIC: Assign CustomerId
-        //    vm.Sale.CustomerId = vm.Customer.CustomerId;
-
-        //    // 3️⃣ SAME LOGIC: Recalculate NetAmount
-        //    vm.Sale.NetAmount = vm.Sale.TotalAmount - vm.Sale.Discount;
-
-        //    // 4️⃣ SAME LOGIC: Update Sale
-        //    var saleResponse =
-        //        await _client.PutAsJsonAsync("Sale/UpdateSale", vm.Sale);
-
-        //    if (saleResponse.IsSuccessStatusCode)
-        //        return RedirectToAction("Index");
-
-        //    ModelState.AddModelError("", "Failed to update sale.");
-        //    return View(vm);
-        //}
 
 
         [HttpPost]

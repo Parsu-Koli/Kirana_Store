@@ -1,14 +1,4 @@
-﻿//namespace KiranaStoreUI.Models
-//{
-//    public class Customer
-//    {
-//        public int CustomerId { get; set; }
-//        public string Name { get; set; }
-//        public string Phone { get; set; }
-//    }
-//}
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 namespace KiranaStoreUI.Models
 {
     public class Customer

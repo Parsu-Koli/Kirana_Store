@@ -1,14 +1,4 @@
-﻿//namespace KiranaStoreUI.Models
-//{
-//    public class Category
-//    {
-//        public int CategoryId { get; set; }
-//        public string CategoryName { get; set; }
-//    }
-//}
-
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace KiranaStoreUI.Models
