@@ -23,7 +23,6 @@ namespace DAL.Models
         public decimal NetAmount { get; set; }
 
         [Required(ErrorMessage = "Payment Mode is required")]
-        [RegularExpression("Cash|UPI|Card|Udari", ErrorMessage = "Payment Mode must be Cash, UPI, or Card")]
         public string PaymentMode { get; set; }
 
         [Required(ErrorMessage = "Sale Date is required")]
