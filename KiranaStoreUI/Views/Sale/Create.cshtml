@@ -43,7 +43,7 @@
                                    class="form-control fw-bold text-success text-end" readonly />
                         </div>
 
-                        <div class="mb-3">
+                        @* <div class="mb-3">
                             <label class="fw-bold">Payment Mode</label>
                             <select asp-for="Sale.PaymentMode" class="form-select">
                                 <option>Cash</option>
@@ -51,6 +51,18 @@
                                 <option>Card</option>
                                 <option>Udari</option>
                             </select>
+                        </div> *@
+                        <div class="mb-3">
+
+                            <label class="fw-bold">
+                                Payment Mode
+                            </label>
+
+                            <select asp-for="Sale.PaymentMode"
+                                    id="paymentMode"
+                                    class="form-select">
+                            </select>
+
                         </div>
 
                         <div class="mb-3">
@@ -540,5 +552,96 @@
             alert("Voice recognition failed");
         };
     }
+
+    // =====================================
+    // PAYMENT MODES LANGUAGE WISE
+    // =====================================
+
+    const paymentModes = {
+
+        // English
+        en: [
+            { text: "Cash", value: "Cash" },
+            { text: "UPI", value: "UPI" },
+            { text: "Card", value: "Card" },
+            { text: "Udari", value: "Udari" }
+        ],
+
+        // Marathi
+        mr: [
+            { text: "रोख", value: "Cash" },
+            { text: "यूपीआय", value: "UPI" },
+            { text: "कार्ड", value: "Card" },
+            { text: "उधारी", value: "Udari" }
+        ],
+
+        // Hindi
+        hi: [
+            { text: "नकद", value: "Cash" },
+            { text: "यूपीआई", value: "UPI" },
+            { text: "कार्ड", value: "Card" },
+            { text: "उधारी", value: "Udari" }
+        ]
+    };
+
+    // =====================================
+    // LOAD PAYMENT MODES
+    // =====================================
+
+    function loadPaymentModes() {
+
+        const paymentDropdown =
+            document.getElementById("paymentMode");
+
+        if (!paymentDropdown)
+            return;
+
+        // get google translate dropdown
+        const googleDropdown =
+            document.querySelector(".goog-te-combo");
+
+        let currentLanguage = "en";
+
+        if (googleDropdown) {
+
+            currentLanguage =
+                googleDropdown.value || "en";
+        }
+
+        paymentDropdown.innerHTML = "";
+
+        const modes =
+            paymentModes[currentLanguage]
+            || paymentModes["en"];
+
+        modes.forEach(mode => {
+
+            paymentDropdown.innerHTML += `
+                <option value="${mode.value}">
+                    ${mode.text}
+                </option>
+            `;
+        });
+    }
+
+    // =====================================
+    // INITIAL LOAD
+    // =====================================
+
+    setTimeout(() => {
+
+        loadPaymentModes();
+
+    }, 2000);
+
+    // =====================================
+    // AUTO LANGUAGE CHANGE DETECT
+    // =====================================
+
+    setInterval(() => {
+
+        loadPaymentModes();
+
+    }, 2000);
 
 </script>

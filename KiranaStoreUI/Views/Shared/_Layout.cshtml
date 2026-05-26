@@ -509,6 +509,23 @@
             );
         }
 
+         // =====================================
+    // GET CURRENT SELECTED LANGUAGE
+    // =====================================
+
+    function getCurrentLanguage() {
+
+        const googleDropdown =
+            document.querySelector(".goog-te-combo");
+
+        if (googleDropdown) {
+
+            return googleDropdown.value;
+        }
+
+        return "en";
+    }
+
     </script>
 
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
