@@ -1,10 +1,10 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="utf-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <meta name="google" content="notranslate">
 
@@ -12,21 +12,19 @@
 
     <!-- Bootstrap -->
 
-    <link rel="stylesheet"
-          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
     <!-- Bootstrap Icons -->
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-          rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-
         /* ===================================
            Global Layout
         ====================================*/
 
-        html, body {
+        html,
+        body {
             height: 100%;
         }
 
@@ -66,7 +64,7 @@
         }
 
         .navbar-custom .nav-link:hover {
-            background-color: rgba(255,255,255,0.15);
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .navbar-custom .dropdown-toggle::after {
@@ -103,12 +101,16 @@
         }
 
         /* ===================================
-           Hide Google Translate Branding
-        ====================================*/
+   Hide Google Translate Branding
+===================================*/
 
         .goog-te-banner-frame.skiptranslate,
         iframe.skiptranslate {
             display: none !important;
+        }
+
+        body {
+            top: 0px !important;
         }
 
         .goog-logo-link,
@@ -117,19 +119,31 @@
             display: none !important;
         }
 
-        .goog-te-gadget-simple {
-            border: none !important;
-            background: transparent !important;
-        }
-
         .goog-te-gadget {
             color: transparent !important;
             font-size: 0px !important;
         }
 
         /* ===================================
-           Translate Dropdown
-        ====================================*/
+   Compact Translate Dropdown
+===================================*/
+
+        .goog-te-combo {
+            width: 75px !important;
+            padding: 4px 6px !important;
+            border-radius: 8px !important;
+            border: none !important;
+            background-color: white !important;
+            color: #198754 !important;
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            cursor: pointer;
+            outline: none !important;
+        }
+
+        .goog-te-combo:focus {
+            box-shadow: 0 0 0 0.15rem rgba(255, 255, 255, .25);
+        }
 
         .goog-te-combo {
             width: 100%;
@@ -145,17 +159,67 @@
 
         .goog-te-combo:focus {
             border-color: #198754 !important;
-            box-shadow: 0 0 0 0.15rem rgba(25,135,84,.25);
+            box-shadow: 0 0 0 0.15rem rgba(25, 135, 84, .25);
         }
 
+        /* ===================================
+   Transparent Google Translate
+===================================*/
+
+        .goog-te-combo {
+            width: 70px !important;
+            padding: 4px 6px !important;
+
+            background: transparent !important;
+
+            border: none !important;
+
+            color: white !important;
+
+            font-size: 13px !important;
+
+            font-weight: 600 !important;
+
+            cursor: pointer;
+
+            outline: none !important;
+
+            box-shadow: none !important;
+        }
+
+        /* Dropdown Arrow */
+
+        .goog-te-combo option {
+            color: black !important;
+        }
+
+        /* Focus Effect */
+
+        .goog-te-combo:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Hide Google Branding */
+
+        .goog-logo-link,
+        .goog-te-gadget span,
+        .goog-te-gadget-simple img {
+            display: none !important;
+        }
+
+        .goog-te-gadget {
+            color: transparent !important;
+            font-size: 0 !important;
+        }
     </style>
 
 </head>
 
 @{
-    var username = Context.Session.GetString("Username");
-    var role = Context.Session.GetString("Role");
-    var isLoggedIn = !string.IsNullOrEmpty(username);
+var username = Context.Session.GetString("Username");
+var role = Context.Session.GetString("Role");
+var isLoggedIn = !string.IsNullOrEmpty(username);
 }
 
 <body>
@@ -172,17 +236,12 @@
 
                 <!-- Logo -->
 
-                <a class="navbar-brand d-flex align-items-center"
-                   asp-controller="Home"
-                   asp-action="Index">
+                <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
 
-                    <img src="~/images/logo.jpg"
-                         alt="Logo"
-                         style="height:50px;
+                    <img src="~/images/logo.jpg" alt="Logo" style="height:50px;
                                 width:auto;
                                 border-radius:10px;
-                                margin-right:10px;"
-                         asp-append-version="true" />
+                                margin-right:10px;" asp-append-version="true" />
 
                     <span>Kirana Store</span>
 
@@ -190,10 +249,8 @@
 
                 <!-- Mobile Toggle -->
 
-                <button class="navbar-toggler bg-light"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#navbarNav">
+                <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav">
 
                     <span class="navbar-toggler-icon"></span>
 
@@ -201,160 +258,133 @@
 
                 <!-- Navbar Content -->
 
-                <div class="collapse navbar-collapse"
-                     id="navbarNav">
+                <div class="collapse navbar-collapse" id="navbarNav">
 
                     @if (isLoggedIn)
                     {
-                        <ul class="navbar-nav me-auto align-items-center">
+                    <ul class="navbar-nav me-auto align-items-center">
 
-                            <!-- Dashboard -->
+                        <!-- Language -->
+                        <li class="nav-item me-2">
+                            <div class="d-flex align-items-center">
+                                <!-- Google Translate -->
+                                <div id="google_translate_element"></div>
+                            </div>
+                        </li>
 
-                            <li class="nav-item">
+                        <!-- Billing -->
 
-                                <a class="nav-link"
-                                   asp-controller="DashBoard"
-                                   asp-action="Dashboard">
+                        <li class="nav-item">
 
-                                    <i class="bi bi-speedometer2 me-1"></i>
-                                    Dashboard
+                            <a class="nav-link" asp-controller="Sale" asp-action="Create">
 
-                                </a>
+                                <i class="bi bi-cash-stack me-1"></i>
+                                Billing Sale
 
-                            </li>
+                            </a>
 
-                            <!-- Billing -->
+                        </li>
 
-                            <li class="nav-item">
+                        <!-- History -->
 
-                                <a class="nav-link"
-                                   asp-controller="Sale"
-                                   asp-action="Create">
+                        <li class="nav-item">
 
-                                    <i class="bi bi-cash-stack me-1"></i>
-                                    Billing Sale
+                            <a class="nav-link" asp-controller="Sale" asp-action="Index">
 
-                                </a>
+                                <i class="bi bi-clock-history me-1"></i>
+                                History
 
-                            </li>
+                            </a>
 
-                            <!-- History -->
+                        </li>
 
-                            <li class="nav-item">
+                        <!-- Category -->
 
-                                <a class="nav-link"
-                                   asp-controller="Sale"
-                                   asp-action="Index">
+                        <li class="nav-item">
 
-                                    <i class="bi bi-clock-history me-1"></i>
-                                    History
+                            <a class="nav-link" asp-controller="Category" asp-action="Index">
 
-                                </a>
+                                <i class="bi bi-tags me-1"></i>
+                                Category
 
-                            </li>
+                            </a>
 
-                            <!-- Category -->
+                        </li>
 
-                            <li class="nav-item">
+                        <!-- Stock -->
 
-                                <a class="nav-link"
-                                   asp-controller="Category"
-                                   asp-action="Index">
+                        <li class="nav-item">
 
-                                    <i class="bi bi-tags me-1"></i>
-                                    Category
+                            <a class="nav-link" asp-controller="Stock" asp-action="Chart">
 
-                                </a>
+                                <i class="bi bi-bar-chart-line me-1"></i>
+                                Stock Chart
 
-                            </li>
+                            </a>
 
-                            <!-- Stock -->
+                        </li>
 
-                            <li class="nav-item">
+                        <!-- Products -->
 
-                                <a class="nav-link"
-                                   asp-controller="Stock"
-                                   asp-action="Chart">
+                        <li class="nav-item">
 
-                                    <i class="bi bi-bar-chart-line me-1"></i>
-                                    Stock Chart
+                            <a class="nav-link" asp-controller="Product" asp-action="Index">
 
-                                </a>
+                                <i class="bi bi-cart-fill me-1"></i>
+                                Products
 
-                            </li>
+                            </a>
 
-                            <!-- Products -->
+                        </li>
 
-                            <li class="nav-item">
+                        <!-- More Dropdown -->
 
-                                <a class="nav-link"
-                                   asp-controller="Product"
-                                   asp-action="Index">
+                        <li class="nav-item dropdown">
 
-                                    <i class="bi bi-cart-fill me-1"></i>
-                                    Products
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
 
-                                </a>
+                                <i class="bi bi-grid me-1"></i>
+                                More
 
-                            </li>
+                            </a>
 
-                            <!-- More Dropdown -->
+                            <ul class="dropdown-menu shadow">
 
-                            <li class="nav-item dropdown">
+                                <!-- Profit By Date -->
 
-                                <a class="nav-link dropdown-toggle"
-                                   href="#"
-                                   role="button"
-                                   data-bs-toggle="dropdown">
+                                <li>
 
-                                    <i class="bi bi-grid me-1"></i>
-                                    More
+                                    <a class="dropdown-item" asp-controller="Sale" asp-action="ProfitByDateRange">
 
-                                </a>
-
-                                <ul class="dropdown-menu shadow">
-
-                                    <!-- Profit By Date -->
-
-                                    <li>
-
-                                        <a class="dropdown-item"
-                                           asp-controller="Sale"
-                                           asp-action="ProfitByDateRange">
-
-                                            <i class="bi bi-graph-up-arrow text-success me-2"></i>
-
+                                        <i class="bi bi-graph-up-arrow text-success me-2"></i>
+                                        <span class="text-success">
                                             Profit By Date
+                                        </span>
+                                    </a>
 
-                                        </a>
+                                </li>
 
-                                    </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
 
-                                    <li>
-                                        <hr class="dropdown-divider">
-                                    </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="DashBoard" asp-action="Dashboard">
 
-                                    <!-- Language -->
+                                        <i class="bi bi-speedometer2 me-1 text-success"></i>
 
-                                    <li class="px-2">
+                                        <span class="text-success">
+                                            Dashboard
+                                        </span>
 
-                                        <div class="fw-semibold mb-2 text-success">
+                                    </a>
+                                </li>
 
-                                            <i class="bi bi-translate me-1"></i>
+                            </ul>
 
-                                            Select Language
+                        </li>
 
-                                        </div>
-
-                                        <div id="google_translate_element"></div>
-
-                                    </li>
-
-                                </ul>
-
-                            </li>
-
-                        </ul>
+                    </ul>
                     }
 
                     <!-- Right Side -->
@@ -363,69 +393,63 @@
 
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <!-- User -->
+                        <!-- User -->
 
-                            <li class="nav-item">
+                        <li class="nav-item">
 
-                                <span class="nav-link">
+                            <span class="nav-link">
 
-                                    <i class="bi bi-person-circle me-1"></i>
+                                <i class="bi bi-person-circle me-1"></i>
 
-                                    Hello, @User.Identity.Name
+                                Hello, @User.Identity.Name
 
-                                </span>
+                            </span>
 
-                            </li>
+                        </li>
 
-                            <!-- Register -->
+                        <!-- Register -->
 
-                            <li class="nav-item">
+                        <li class="nav-item">
 
-                                <a class="nav-link"
-                                   asp-controller="User"
-                                   asp-action="Register">
+                            <a class="nav-link" asp-controller="User" asp-action="Register">
 
-                                    <i class="bi bi-person-plus-fill me-1"></i>
+                                <i class="bi bi-person-plus-fill me-1"></i>
 
-                                    Register
+                                Register
 
-                                </a>
+                            </a>
 
-                            </li>
+                        </li>
 
-                            <!-- Logout -->
+                        <!-- Logout -->
 
-                            <li class="nav-item">
+                        <li class="nav-item">
 
-                                <a class="nav-link"
-                                   asp-controller="User"
-                                   asp-action="Logout">
+                            <a class="nav-link" asp-controller="User" asp-action="Logout">
 
-                                    <i class="bi bi-box-arrow-right me-1"></i>
+                                <i class="bi bi-box-arrow-right me-1"></i>
 
-                                    Logout
+                                Logout
 
-                                </a>
+                            </a>
 
-                            </li>
+                        </li>
                         }
                         else
                         {
-                            <!-- Login -->
+                        <!-- Login -->
 
-                            <li class="nav-item">
+                        <li class="nav-item">
 
-                                <a class="nav-link"
-                                   asp-controller="User"
-                                   asp-action="Login">
+                            <a class="nav-link" asp-controller="User" asp-action="Login">
 
-                                    <i class="bi bi-box-arrow-in-right me-1"></i>
+                                <i class="bi bi-box-arrow-in-right me-1"></i>
 
-                                    Login
+                                Login
 
-                                </a>
+                            </a>
 
-                            </li>
+                        </li>
                         }
 
                     </ul>
@@ -442,8 +466,7 @@
          Body
     ====================================-->
 
-    <div class="container mt-4"
-         id="Body">
+    <div class="container mt-4" id="Body">
 
         @RenderBody()
 
@@ -509,22 +532,48 @@
             );
         }
 
-         // =====================================
-    // GET CURRENT SELECTED LANGUAGE
-    // =====================================
+        // =====================================
+        // GET CURRENT SELECTED LANGUAGE
+        // =====================================
 
-    function getCurrentLanguage() {
+        function getCurrentLanguage() {
 
-        const googleDropdown =
-            document.querySelector(".goog-te-combo");
+            const googleDropdown =
+                document.querySelector(".goog-te-combo");
 
-        if (googleDropdown) {
+            if (googleDropdown) {
 
-            return googleDropdown.value;
+                return googleDropdown.value;
+            }
+
+            return "en";
         }
 
-        return "en";
-    }
+
+
+        function changeTranslateText() {
+
+            const interval = setInterval(() => {
+
+                const selectBox =
+                    document.querySelector(".goog-te-combo");
+
+                if (selectBox) {
+
+                    // Change default option text
+
+                    if (selectBox.options[0]) {
+                        selectBox.options[0].text = "ENG";
+                    }
+
+                    clearInterval(interval);
+                }
+
+            }, 500);
+        }
+
+        window.addEventListener("load", changeTranslateText);
+
 
     </script>
 
@@ -549,4 +598,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>
+
 </html>
