@@ -73,7 +73,7 @@ namespace KiranaStoreUI.Controllers
 
                 await HttpContext.SignInAsync("Cookies", principal);
 
-                return RedirectToAction("Dashboard", "DashBoard");
+                return RedirectToAction("Create", "Sale");
             }
 
             ModelState.AddModelError("", "Invalid username or password");
