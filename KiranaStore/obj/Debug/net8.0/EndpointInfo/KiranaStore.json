@@ -187,6 +187,29 @@
         }
       }
     },
+    "/api/Category/GetAllProductsById/{id}": {
+      "get": {
+        "tags": [
+          "Category"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Customer/AddCustomer": {
       "post": {
         "tags": [
@@ -299,6 +322,28 @@
               "format": "int32"
             }
           }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "Health"
         ],
         "responses": {
           "200": {
@@ -929,6 +974,28 @@
         }
       }
     },
+    "/api/Sale/DeleteSale": {
+      "delete": {
+        "tags": [
+          "Sale"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Sale/GetNextInvoice": {
       "get": {
         "tags": [
@@ -1042,8 +1109,8 @@
             "name": "qty",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "number",
+              "format": "double"
             }
           }
         ],
@@ -1072,8 +1139,8 @@
             "name": "qty",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "number",
+              "format": "double"
             }
           }
         ],
@@ -1305,6 +1372,9 @@
   "components": {
     "schemas": {
       "Category": {
+        "required": [
+          "categoryName"
+        ],
         "type": "object",
         "properties": {
           "categoryId": {
@@ -1312,7 +1382,15 @@
             "format": "int32"
           },
           "categoryName": {
-            "type": "string",
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Product"
+            },
             "nullable": true
           }
         },
@@ -1351,6 +1429,11 @@
         "additionalProperties": false
       },
       "Order": {
+        "required": [
+          "customerId",
+          "orderDate",
+          "totalAmount"
+        ],
         "type": "object",
         "properties": {
           "orderId": {
@@ -1362,10 +1445,13 @@
             "format": "date-time"
           },
           "customerId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "totalAmount": {
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           }
@@ -1373,6 +1459,13 @@
         "additionalProperties": false
       },
       "OrderItem": {
+        "required": [
+          "orderId",
+          "price",
+          "productId",
+          "quantity",
+          "total"
+        ],
         "type": "object",
         "properties": {
           "orderItemId": {
@@ -1380,22 +1473,30 @@
             "format": "int32"
           },
           "orderId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "productId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "quantity": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "price": {
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           },
           "total": {
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           }
@@ -1403,6 +1504,12 @@
         "additionalProperties": false
       },
       "Payment": {
+        "required": [
+          "amountPaid",
+          "mode",
+          "paymentDate",
+          "saleId"
+        ],
         "type": "object",
         "properties": {
           "paymentId": {
@@ -1410,20 +1517,23 @@
             "format": "int32"
           },
           "saleId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "amountPaid": {
+            "minimum": 0.01,
             "type": "number",
             "format": "double"
           },
           "mode": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "paymentDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           }
         },
         "additionalProperties": false
@@ -1473,8 +1583,13 @@
             "format": "double"
           },
           "quantityInStock": {
-            "type": "integer",
-            "format": "int32"
+            "type": "number",
+            "format": "double"
+          },
+          "expiryDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
           },
           "active": {
             "type": "boolean"
@@ -1483,6 +1598,11 @@
         "additionalProperties": false
       },
       "Purchase": {
+        "required": [
+          "purchaseDate",
+          "supplierId",
+          "totalAmount"
+        ],
         "type": "object",
         "properties": {
           "purchaseId": {
@@ -1490,14 +1610,17 @@
             "format": "int32"
           },
           "supplierId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "purchaseDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "totalAmount": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           }
@@ -1505,6 +1628,13 @@
         "additionalProperties": false
       },
       "PurchaseItem": {
+        "required": [
+          "price",
+          "productId",
+          "purchaseId",
+          "quantity",
+          "total"
+        ],
         "type": "object",
         "properties": {
           "purchaseItemId": {
@@ -1512,22 +1642,30 @@
             "format": "int32"
           },
           "purchaseId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "productId": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "quantity": {
+            "maximum": 2147483647,
+            "minimum": 1,
             "type": "integer",
             "format": "int32"
           },
           "price": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "total": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           }
@@ -1562,7 +1700,10 @@
       },
       "Sale": {
         "required": [
-          "saleItems"
+          "invoiceNumber",
+          "paymentMode",
+          "saleDate",
+          "totalAmount"
         ],
         "type": "object",
         "properties": {
@@ -1571,8 +1712,9 @@
             "format": "int32"
           },
           "invoiceNumber": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 20,
+            "minLength": 0,
+            "type": "string"
           },
           "customerId": {
             "type": "integer",
@@ -1580,24 +1722,27 @@
             "nullable": true
           },
           "totalAmount": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "discount": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "netAmount": {
+            "minimum": 0,
             "type": "number",
             "format": "double"
           },
           "paymentMode": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "saleDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date"
           },
           "saleItems": {
             "type": "array",
@@ -1625,8 +1770,8 @@
             "format": "int32"
           },
           "quantity": {
-            "type": "integer",
-            "format": "int32"
+            "type": "number",
+            "format": "double"
           },
           "price": {
             "type": "number",
@@ -1640,6 +1785,11 @@
         "additionalProperties": false
       },
       "Supplier": {
+        "required": [
+          "address",
+          "phone",
+          "supplierName"
+        ],
         "type": "object",
         "properties": {
           "supplierId": {
@@ -1647,16 +1797,20 @@
             "format": "int32"
           },
           "supplierName": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 100,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z\\s]+$",
+            "type": "string"
           },
           "phone": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "pattern": "^\\d{10}$",
+            "type": "string"
           },
           "address": {
-            "type": "string",
-            "nullable": true
+            "maxLength": 250,
+            "minLength": 5,
+            "type": "string"
           }
         },
         "additionalProperties": false
