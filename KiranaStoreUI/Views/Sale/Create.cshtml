@@ -587,8 +587,7 @@
     // =====================================
     // LOAD PAYMENT MODES
     // =====================================
-
-    function loadPaymentModes() {
+        function loadPaymentModes() {
 
         const paymentDropdown =
             document.getElementById("paymentMode");
@@ -596,7 +595,10 @@
         if (!paymentDropdown)
             return;
 
-        // get google translate dropdown
+        // save selected value
+        const selectedValue =
+            paymentDropdown.value;
+
         const googleDropdown =
             document.querySelector(".goog-te-combo");
 
@@ -622,25 +624,26 @@
                 </option>
             `;
         });
+
+        // restore selected value
+        paymentDropdown.value = selectedValue;
     }
 
-    // =====================================
-    // INITIAL LOAD
-    // =====================================
-
-    setTimeout(() => {
+        setTimeout(() => {
 
         loadPaymentModes();
 
-    }, 2000);
+        const googleDropdown =
+            document.querySelector(".goog-te-combo");
 
-    // =====================================
-    // AUTO LANGUAGE CHANGE DETECT
-    // =====================================
+        if (googleDropdown) {
 
-    setInterval(() => {
+            googleDropdown.addEventListener("change", () => {
 
-        loadPaymentModes();
+                loadPaymentModes();
+
+            });
+        }
 
     }, 2000);
 
