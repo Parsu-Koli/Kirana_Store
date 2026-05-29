@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\Internship\\Kirana Store\\DAL\\DAL.csproj": {}
+    "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\My Projects\\Kirana_Store\\DAL\\DAL.csproj": {}
   },
   "projects": {
-    "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\Internship\\Kirana Store\\DAL\\DAL.csproj": {
+    "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\My Projects\\Kirana_Store\\DAL\\DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\Internship\\Kirana Store\\DAL\\DAL.csproj",
+        "projectUniqueName": "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\My Projects\\Kirana_Store\\DAL\\DAL.csproj",
         "projectName": "DAL",
-        "projectPath": "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\Internship\\Kirana Store\\DAL\\DAL.csproj",
+        "projectPath": "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\My Projects\\Kirana_Store\\DAL\\DAL.csproj",
         "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\Internship\\Kirana Store\\DAL\\obj\\",
+        "outputPath": "C:\\Users\\user\\Documents\\progarms\\Documents\\JVIT\\My Projects\\Kirana_Store\\DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -62,6 +62,10 @@
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[8.0.0, )"
             }

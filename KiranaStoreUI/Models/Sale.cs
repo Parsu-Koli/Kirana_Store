@@ -45,7 +45,7 @@ namespace KiranaStoreUI.Models
         // Custom validator to ensure SaleDate is not in the future
         public static ValidationResult? ValidateSaleDate(DateTime saleDate, ValidationContext context)
         {
-            if (saleDate > DateTime.Now)
+            if (saleDate > DateTime.UtcNow)
                 return new ValidationResult("Sale Date cannot be in the future");
             return ValidationResult.Success;
         }
