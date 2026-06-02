@@ -141,6 +141,19 @@
                                 Search Product
                             </label>
 
+                            @* <div class="input-group shadow-sm">
+
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search text-primary"></i>
+                                </span>
+
+                                <input type="text"
+                                       id="productSearch"
+                                       class="form-control border-start-0 shadow-none"
+                                       placeholder="Search product name..." />
+
+                            </div> *@
+
                             <div class="input-group shadow-sm">
 
                                 <span class="input-group-text bg-white border-end-0">
@@ -151,6 +164,69 @@
                                        id="productSearch"
                                        class="form-control border-start-0 shadow-none"
                                        placeholder="Search product name..." />
+
+                                <button type="button"
+                                        class="btn btn-success"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#scannerModal">
+
+                                    <i class="bi bi-upc-scan"></i>
+                                    Scan
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="modal fade"
+                             id="scannerModal"
+                             tabindex="-1">
+
+                            <div class="modal-dialog modal-md">
+
+                                <div class="modal-content">
+
+                                    <div class="modal-header">
+
+                                        <h5 class="modal-title">
+                                            Scan Product Barcode
+                                        </h5>
+
+                                        <button type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal">
+                                        </button>
+
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="alert alert-info mb-2">
+
+                                            <strong>Scanned Barcode:</strong>
+
+                                            <span id="barcodeValue">
+                                                Waiting for scan...
+                                            </span>
+
+                                        </div>
+
+                                        <div class="alert alert-success mb-2">
+
+                                            <strong>Product:</strong>
+
+                                            <span id="productValue">
+                                                No product scanned
+                                            </span>
+
+                                        </div>
+
+                                        <div id="reader"></div>
+
+                                    </div>
+
+                                </div>
 
                             </div>
 
@@ -175,7 +251,7 @@
         </div>
     </div>
 </div>
-
+<script src="https://unpkg.com/html5-qrcode"></script>
 <script>
 
     const total = document.getElementById("total");
@@ -426,6 +502,16 @@
         }
     }
 
+        function removeProduct(id) {
+
+        selectedProducts =
+            selectedProducts.filter(
+                product => product.id !== id
+            );
+
+        renderProducts();
+    }
+
     function decreaseQty(id) {
 
         let product = selectedProducts.find(x => x.id === id);
@@ -647,4 +733,181 @@
 
     }, 2000);
 
+    // ============================================
+    // BARCODE SCANNER GLOBAL VARIABLES
+    // ============================================
+
+    let scannerStarted = false;
+    let scannerInstance = null;
+
+    // Prevent duplicate processing
+    let isProcessingScan = false;
+
+    // Last scanned barcode
+    let lastScannedBarcode = "";
+
+    // Cooldown time
+    let scanCooldown = 2000;
+
+        // ============================================
+    // START BARCODE SCANNER
+    // ============================================
+
+    document
+        .getElementById("scannerModal")
+        .addEventListener("shown.bs.modal", function () {
+
+            if (scannerStarted)
+                return;
+
+            scannerStarted = true;
+
+            scannerInstance =
+                new Html5QrcodeScanner(
+                    "reader",
+                    {
+                        fps: 40,
+
+                        qrbox: {
+                            width: 250,
+                            height: 150
+                        },
+
+                        rememberLastUsedCamera: true,
+
+                        supportedScanTypes: [
+                            Html5QrcodeScanType.SCAN_TYPE_CAMERA
+                        ]
+                    }
+                );
+
+            scannerInstance.render(
+                onScanSuccess
+            );
+        });
+
+    // ============================================
+    // BEEP SOUND
+    // ============================================
+
+    function playBeep() {
+
+        const audio = new Audio(
+            "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+        );
+
+        audio.play();
+    }
+
+        // ============================================
+    // BARCODE SCAN SUCCESS
+    // ============================================
+
+    function onScanSuccess(decodedText) {
+
+        // Already processing another scan
+        if (isProcessingScan)
+            return;
+
+        // Same barcode still visible
+        if (decodedText === lastScannedBarcode)
+            return;
+
+        isProcessingScan = true;
+
+        lastScannedBarcode = decodedText;
+
+        console.log("Barcode:", decodedText);
+
+        fetch(`/Sale/GetProductByBarcode?barcode=${decodedText}`)
+            .then(response => response.json())
+            .then(data => {
+
+                if (!data.success) {
+
+                    alert("Product not found");
+
+                    return;
+                }
+
+                const product = data.product;
+
+    document.getElementById("barcodeValue").innerText =
+        decodedText;
+
+    document.getElementById("productValue").innerText =
+        product.productName;
+
+                // Add product to sale
+                addProduct(
+                    product.productId,
+                    product.productName,
+                    product.sellingPrice
+                );
+
+                // Success beep
+                playBeep();
+
+                // Optional visual feedback
+                console.log(
+                    `${product.productName} added successfully`
+                );
+            })
+            .catch(error => {
+
+                console.error(error);
+
+                alert("Barcode scan failed");
+            })
+            .finally(() => {
+
+                // Wait until customer removes barcode
+                setTimeout(() => {
+
+                    isProcessingScan = false;
+
+                    lastScannedBarcode = "";
+
+                }, scanCooldown);
+            });
+    }
+
+        // ====================================
+    // MOBILE SCANNER LISTENER
+    // ====================================
+
+    let mobileLastBarcode = "";
+
+    setInterval(() => {
+
+        fetch('/BarcodeTest/GetBarcode')
+            .then(r => r.json())
+            .then(data => {
+
+                if (!data.barcode)
+                    return;
+
+                if (data.barcode === mobileLastBarcode)
+                    return;
+
+                mobileLastBarcode = data.barcode;
+
+                fetch(`/Sale/GetProductByBarcode?barcode=${data.barcode}`)
+                    .then(r => r.json())
+                    .then(result => {
+
+                        if (!result.success)
+                            return;
+
+                        addProduct(
+                            result.product.productId,
+                            result.product.productName,
+                            result.product.sellingPrice
+                        );
+
+                        playBeep();
+                    });
+            });
+
+    }, 1000);
 </script>

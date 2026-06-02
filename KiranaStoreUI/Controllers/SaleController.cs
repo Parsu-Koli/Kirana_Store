@@ -423,6 +423,31 @@ namespace KiranaStoreUI.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProductByBarcode(string barcode)
+        {
+            AddJwtToken();
+            var response =
+                await _client.GetAsync(
+                    $"Product/barcode/{barcode}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Json(new
+                {
+                    success = false
+                });
+            }
+
+            var product =
+                await response.Content.ReadFromJsonAsync<Product>();
+
+            return Json(new
+            {
+                success = true,
+                product
+            });
+        }
 
     }
 }
