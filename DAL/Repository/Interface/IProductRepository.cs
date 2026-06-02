@@ -17,5 +17,6 @@ namespace DAL.Repository.Interface
         void DecreaseProductStock(int productId, decimal qty);
         void IncreaseProductStock(int productId, decimal qty);
 
+        Task<Product?> GetProductByBarcodeAsync(string barcode);
     }
 }

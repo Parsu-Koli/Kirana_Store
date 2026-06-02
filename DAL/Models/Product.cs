@@ -24,6 +24,9 @@ namespace DAL.Models
         public DateTime? ExpiryDate { get; set; }
         public required bool Active { get; set; }
 
+        [MaxLength(50)]
+        public string? Barcode { get; set; }
+
         [JsonIgnore]
         public Category? Category { get; set; }
     }

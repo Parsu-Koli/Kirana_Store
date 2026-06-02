@@ -107,7 +107,11 @@ namespace DAL.Repository.Implimentation
             _context.SaveChanges();
         }
 
-
+        public async Task<Product?> GetProductByBarcodeAsync(string barcode)
+        {
+            return await _context.Products
+                .FirstOrDefaultAsync(p => p.Barcode == barcode);
+        }
 
     }
 }

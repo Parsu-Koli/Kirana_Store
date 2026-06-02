@@ -46,5 +46,8 @@ namespace KiranaStoreUI.Models
         public DateTime? ExpiryDate { get; set; }
 
         public bool Active { get; set; } = true;
+
+        [MaxLength(50)]
+        public string? Barcode { get; set; }
     }
 }

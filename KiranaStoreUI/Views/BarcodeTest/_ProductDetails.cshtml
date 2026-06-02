@@ -1,0 +1,45 @@
+﻿@model KiranaStoreUI.Models.Product
+
+<div class="card mt-3">
+    <div class="card-header">
+        Product Details
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered">
+
+            <tr>
+                <th>Product ID</th>
+                <td>@Model.ProductId</td>
+            </tr>
+
+            <tr>
+                <th>Product Name</th>
+                <td>@Model.ProductName</td>
+            </tr>
+
+            <tr>
+                <th>Barcode</th>
+                <td>@Model.Barcode</td>
+            </tr>
+
+            <tr>
+                <th>Selling Price</th>
+                <td>@Model.SellingPrice</td>
+            </tr>
+
+            <tr>
+                <th>Stock</th>
+                <td>@Model.QuantityInStock</td>
+            </tr>
+
+            <tr>
+                <th>Unit</th>
+                <td>@Model.Unit</td>
+            </tr>
+
+        </table>
+
+    </div>
+</div>

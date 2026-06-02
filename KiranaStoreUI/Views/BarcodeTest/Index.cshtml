@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Barcode Scanner";
+}
+
+<h2>Barcode Scanner Test</h2>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div id="reader"></div>
+
+        <div class="mt-3">
+            <label>Scanned Barcode</label>
+
+            <input type="text"
+                   id="barcode"
+                   class="form-control"
+                   readonly />
+        </div>
+
+    </div>
+</div>
+
+<hr />
+
+<div id="productResult"></div>
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+<script>
+
+    function onScanSuccess(decodedText)
+    {
+        document.getElementById("barcode").value = decodedText;
+
+        fetch('/BarcodeTest/SaveBarcode', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                barcode: decodedText
+            })
+        })
+        .then(() => {
+
+            document.getElementById("productResult").innerHTML =
+                "<div class='alert alert-success'>Barcode Sent To Laptop</div>";
+
+        })
+        .catch(() => {
+
+            document.getElementById("productResult").innerHTML =
+                "<div class='alert alert-danger'>Failed To Send Barcode</div>";
+
+        });
+    }
+
+    function onScanFailure(error)
+    {
+        // ignore
+    }
+
+    let html5QrcodeScanner =
+        new Html5QrcodeScanner(
+            "reader",
+            {
+                fps: 30,
+                qrbox: 250
+            },
+            false
+        );
+
+    html5QrcodeScanner.render(
+        onScanSuccess,
+        onScanFailure
+    );
+
+</script>
+
+</script>

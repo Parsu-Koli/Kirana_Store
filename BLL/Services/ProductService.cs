@@ -1,4 +1,5 @@
 ﻿using DAL.Models;
+using DAL.Repository.Implimentation;
 using DAL.Repository.Interface;
 
 namespace BLL.Services
@@ -82,6 +83,11 @@ namespace BLL.Services
         {
             return _prodRepo.GetAll()
                 .Where(p => p.ProductName.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public async Task<Product?> GetProductByBarcodeAsync(string barcode)
+        {
+            return await _prodRepo.GetProductByBarcodeAsync(barcode);
         }
     }
 }

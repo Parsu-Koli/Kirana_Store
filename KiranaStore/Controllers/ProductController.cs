@@ -2,6 +2,7 @@
 using DAL.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KiranaStore.Controllers
 {
@@ -82,6 +83,20 @@ namespace KiranaStore.Controllers
             }
         }
 
+        [HttpGet("barcode/{barcode}")]
+        public async Task<IActionResult> GetProductByBarcode(string barcode)
+        {
+            var product = await _productService.GetProductByBarcodeAsync(barcode);
 
+            if (product == null)
+            {
+                return NotFound(new
+                {
+                    Message = "Product not found"
+                });
+            }
+
+            return Ok(product);
+        }
     }
 }
