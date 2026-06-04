@@ -212,6 +212,128 @@
             color: transparent !important;
             font-size: 0 !important;
         }
+
+/* ===================================
+   Professional Loader
+===================================*/
+
+#loader-container {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(25,135,84,0.15);
+
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+
+    z-index: 99999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loader-container.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loader {
+    width: 48px;
+    height: 48px;
+    display: inline-block;
+    position: relative;
+    transform: rotate(45deg);
+}
+
+.loader::before {
+    content: '';
+    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    left: 0;
+    top: -24px;
+    animation: animloader 4s ease infinite;
+}
+
+.loader::after {
+    content: '';
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    background: white;
+    box-shadow: 0 0 15px rgba(0,0,0,.2);
+    animation: animloader2 2s ease infinite;
+}
+
+@@keyframes animloader {
+    0% {
+        box-shadow: 0 24px rgba(255,255,255,0),
+                    24px 24px rgba(255,255,255,0),
+                    24px 48px rgba(255,255,255,0),
+                    0 48px rgba(255,255,255,0);
+    }
+    50% {
+        box-shadow: 0 24px white,
+                    24px 24px white,
+                    24px 48px white,
+                    0 48px white;
+    }
+    100% {
+        box-shadow: 0 24px rgba(255,255,255,0),
+                    24px 24px rgba(255,255,255,0),
+                    24px 48px rgba(255,255,255,0),
+                    0 48px rgba(255,255,255,0);
+    }
+}
+
+@@keyframes animloader2 {
+    0% {
+        transform: translate(0,0);
+    }
+    25% {
+        transform: translate(100%,0);
+    }
+    50% {
+        transform: translate(100%,100%);
+    }
+    75% {
+        transform: translate(0,100%);
+    }
+    100% {
+        transform: translate(0,0);
+    }
+}
+.loader-content{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+
+
+/* Move text upward */
+.loader-content h4,
+.loader-content small {
+    transform: translateY(-20px);
+}
+
+#loader-container {
+    transition: all .4s ease;
+}
+
+#loader-container.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
     </style>
 
 </head>
@@ -224,6 +346,23 @@ var isLoggedIn = !string.IsNullOrEmpty(username);
 
 <body>
 
+<div id="loader-container">
+
+    <div class="loader-content">
+
+        <div class="loader"></div>
+
+        <h4 class="fw-bold text-success mt-5 mb-1">
+            Kirana Store
+        </h4>
+
+        <small class="text-muted">
+            Loading Application...
+        </small>
+
+    </div>
+
+</div>
     <!-- ===================================
          Navbar
     ====================================-->
@@ -606,6 +745,60 @@ var isLoggedIn = !string.IsNullOrEmpty(username);
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const loader =
+        document.getElementById("loader-container");
+
+    if (!loader) return;
+
+    // Hide after page load
+    window.addEventListener("load", function () {
+
+        setTimeout(() => {
+
+            loader.classList.add("hide");
+
+        }, 500);
+
+    });
+
+    // Navigation links
+    document
+        .querySelectorAll("a.nav-link, .dropdown-item")
+        .forEach(link => {
+
+            link.addEventListener("click", function () {
+
+                loader.classList.remove("hide");
+
+            });
+
+        });
+
+    // Form submits (Login, Register, Create Sale, etc.)
+    document
+        .querySelectorAll("form")
+        .forEach(form => {
+
+            form.addEventListener("submit", function () {
+
+                if (form.checkValidity()) {
+
+                    loader.classList.remove("hide");
+
+                }
+
+            });
+
+        });
+
+});
+
+</script>
 
 </body>
 
