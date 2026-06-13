@@ -768,16 +768,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Navigation links
     document
-        .querySelectorAll("a.nav-link, .dropdown-item")
-        .forEach(link => {
+    .querySelectorAll("a.nav-link, .dropdown-item")
+    .forEach(link => {
 
-            link.addEventListener("click", function () {
+        link.addEventListener("click", function () {
 
-                loader.classList.remove("hide");
+            const href = this.getAttribute("href");
 
-            });
+            // Ignore dropdown toggle
+            if (!href || href === "#") {
+                return;
+            }
 
+            loader.classList.remove("hide");
         });
+
+    });
 
     // Form submits (Login, Register, Create Sale, etc.)
     document
