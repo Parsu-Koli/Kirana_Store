@@ -1,41 +1,94 @@
 ﻿using KiranaStoreUI.Models;
 using KiranaStoreUI.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Text.Json;
 
 namespace KiranaStoreUI.Controllers
 {
     public class SaleController(IHttpClientFactory httpClientFactory)
     : BaseLoginController(httpClientFactory)
     {
-        
 
-       
+
+
         // ---------------- INDEX ----------------
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    AddJwtToken();
+        //    if (!AddJwtToken())
+        //        return RedirectToLogin();
+
+        //    var sales = await _client.GetFromJsonAsync<List<Sale>>("Sale/GetAllSales");
+        //    var customers = await _client.GetFromJsonAsync<List<Customer>>("Customer/GetCustomers");
+
+        //    var customerDict = customers.ToDictionary(c => c.CustomerId, c => c.Name);
+
+        //    foreach (var s in sales)
+        //    {
+        //        s.Customer = new Customer
+        //        {
+        //            Name = s.CustomerId.HasValue && customerDict.ContainsKey(s.CustomerId.Value)
+        //                   ? customerDict[s.CustomerId.Value]
+        //                   : "N/A"
+        //        };
+        //    }
+
+        //    return View(sales);
+        //}
+
+        // ---------------- CREATE ----------------
+
+        public async Task<IActionResult> Index(int page = 1)
         {
-            AddJwtToken();
             if (!AddJwtToken())
                 return RedirectToLogin();
 
-            var sales = await _client.GetFromJsonAsync<List<Sale>>("Sale/GetAllSales");
-            var customers = await _client.GetFromJsonAsync<List<Customer>>("Customer/GetCustomers");
+            var response = await _client.GetAsync(
+                $"Sale/GetSalesPaged?pageNumber={page}&pageSize=20");
 
-            var customerDict = customers.ToDictionary(c => c.CustomerId, c => c.Name);
+            if (!response.IsSuccessStatusCode)
+                return View(new List<Sale>());
+
+            var json = await response.Content.ReadAsStringAsync();
+
+            using var doc = JsonDocument.Parse(json);
+
+            var sales = JsonSerializer.Deserialize<List<Sale>>(
+                doc.RootElement.GetProperty("data").GetRawText(),
+                new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+            // Load Customers
+            var customers = await _client.GetFromJsonAsync<List<Customer>>(
+                "Customer/GetCustomers");
+
+            var customerDict = customers.ToDictionary(
+                c => c.CustomerId,
+                c => c.Name);
 
             foreach (var s in sales)
             {
                 s.Customer = new Customer
                 {
-                    Name = s.CustomerId.HasValue && customerDict.ContainsKey(s.CustomerId.Value)
-                           ? customerDict[s.CustomerId.Value]
-                           : "N/A"
+                    Name = s.CustomerId.HasValue &&
+                           customerDict.ContainsKey(s.CustomerId.Value)
+                        ? customerDict[s.CustomerId.Value]
+                        : "N/A"
                 };
             }
+
+            ViewBag.CurrentPage =
+                doc.RootElement.GetProperty("pageNumber").GetInt32();
+
+            ViewBag.TotalPages =
+                doc.RootElement.GetProperty("totalPages").GetInt32();
 
             return View(sales);
         }
 
-        // ---------------- CREATE ----------------
         public async Task<IActionResult> Create()
         {
             AddJwtToken();
@@ -61,7 +114,7 @@ namespace KiranaStoreUI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Create(SaleCustomerVM vm)
+        public async Task<IActionResult> Create( SaleCustomerVM vm,string action)
         {
             AddJwtToken();
             if (!AddJwtToken())
@@ -174,8 +227,18 @@ namespace KiranaStoreUI.Controllers
 
             if (saleResponse.IsSuccessStatusCode)
             {
+                var createdSale =
+                    await saleResponse.Content.ReadFromJsonAsync<Sale>();
+
                 TempData["SuccessMsg"] =
                     $"Sale created successfully! Invoice: {vm.Sale.InvoiceNumber}";
+
+                if (action == "saveprint")
+                {
+                    return RedirectToAction(
+                        "Details",
+                        new { id = createdSale.SaleId });
+                }
 
                 return RedirectToAction("Index");
             }
@@ -448,6 +511,5 @@ namespace KiranaStoreUI.Controllers
                 product
             });
         }
-
     }
 }
