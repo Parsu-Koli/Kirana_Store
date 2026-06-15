@@ -9,6 +9,7 @@ namespace DAL.Repository.Interfaces
         IEnumerable<Sale> GetByDate(DateTime date);
         void Add(Sale sale);
 
+        IQueryable<Sale> GetSalesQueryable();
         void LoadSaleItems(Sale sale);
         void UpdateSale(Sale sale);
 

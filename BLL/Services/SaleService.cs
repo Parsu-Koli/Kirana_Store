@@ -120,5 +120,10 @@ namespace BLL.Services
             _saleRepo.Delete(id);
 
         }
+
+        public IQueryable<Sale> GetSalesQueryable()
+        {
+            return _saleRepo.GetSalesQueryable();
+        }
     }
 }

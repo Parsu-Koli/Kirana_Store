@@ -66,7 +66,10 @@ namespace DAL.Repository.Implementation
             existingSale.Discount = sale.Discount;
             existingSale.NetAmount = sale.NetAmount;
             existingSale.PaymentMode = sale.PaymentMode;
-            existingSale.SaleDate = sale.SaleDate;
+            existingSale.SaleDate =
+     DateTime.SpecifyKind(
+         sale.SaleDate,
+         DateTimeKind.Utc);
 
             // 🔹 Handle SaleItems
             UpdateSaleItems(existingSale, sale.SaleItems);
@@ -128,6 +131,9 @@ namespace DAL.Repository.Implementation
             _context.SaveChanges();
         }
 
-
+        public IQueryable<Sale> GetSalesQueryable()
+        {
+            return _context.Sales.AsNoTracking();
+        }
     }
 }

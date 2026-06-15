@@ -43,15 +43,6 @@
                                    class="form-control fw-bold text-success text-end" readonly />
                         </div>
 
-                        @* <div class="mb-3">
-                            <label class="fw-bold">Payment Mode</label>
-                            <select asp-for="Sale.PaymentMode" class="form-select">
-                                <option>Cash</option>
-                                <option>UPI</option>
-                                <option>Card</option>
-                                <option>Udari</option>
-                            </select>
-                        </div> *@
                         <div class="mb-3">
 
                             <label class="fw-bold">
@@ -140,19 +131,6 @@
                             <label class="form-label fw-bold">
                                 Search Product
                             </label>
-
-                            @* <div class="input-group shadow-sm">
-
-                                <span class="input-group-text bg-white border-end-0">
-                                    <i class="bi bi-search text-primary"></i>
-                                </span>
-
-                                <input type="text"
-                                       id="productSearch"
-                                       class="form-control border-start-0 shadow-none"
-                                       placeholder="Search product name..." />
-
-                            </div> *@
 
                             <div class="input-group shadow-sm">
 
@@ -245,7 +223,19 @@
                 </div>
 
                 <hr />
-                <button class="btn btn-success">Submit</button>
+                <button type="submit"
+                        name="action"
+                        value="save"
+                        class="btn btn-success">
+                    Save
+                </button>
+
+                <button type="submit"
+                        name="action"
+                        value="saveprint"
+                        class="btn btn-primary">
+                    Save & Print
+                </button>
                 <a href="/Sale/Index" class="btn btn-secondary">Back</a>
             </form>
         </div>
@@ -670,40 +660,24 @@
         ]
     };
 
-    // =====================================
-    // LOAD PAYMENT MODES
-    // =====================================
+
         function loadPaymentModes() {
 
-        const paymentDropdown =
-            document.getElementById("paymentMode");
+        const paymentDropdown = document.getElementById("paymentMode");
+        if (!paymentDropdown) return;
 
-        if (!paymentDropdown)
-            return;
+        const googleDropdown = document.querySelector(".goog-te-combo");
 
-        // save selected value
-        const selectedValue =
-            paymentDropdown.value;
+        let currentLanguage = googleDropdown?.value || "en";
 
-        const googleDropdown =
-            document.querySelector(".goog-te-combo");
-
-        let currentLanguage = "en";
-
-        if (googleDropdown) {
-
-            currentLanguage =
-                googleDropdown.value || "en";
-        }
+        // ⭐ store current selected value BEFORE rebuild
+        let selectedValue = paymentDropdown.value;
 
         paymentDropdown.innerHTML = "";
 
-        const modes =
-            paymentModes[currentLanguage]
-            || paymentModes["en"];
+        const modes = paymentModes[currentLanguage] || paymentModes["en"];
 
         modes.forEach(mode => {
-
             paymentDropdown.innerHTML += `
                 <option value="${mode.value}">
                     ${mode.text}
@@ -711,8 +685,12 @@
             `;
         });
 
-        // restore selected value
-        paymentDropdown.value = selectedValue;
+        // ⭐ PROFESSIONAL DEFAULT LOGIC
+        if (selectedValue && selectedValue !== "") {
+            paymentDropdown.value = selectedValue;   // restore user choice
+        } else {
+            paymentDropdown.value = "Cash";          // default for new form
+        }
     }
 
         setTimeout(() => {

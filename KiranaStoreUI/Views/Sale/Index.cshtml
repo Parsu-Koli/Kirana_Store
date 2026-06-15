@@ -153,6 +153,74 @@
 
             </table>
 
+
+            @if (ViewBag.TotalPages > 1)
+            {
+                <div class="card-footer bg-white border-0 py-3">
+
+                    <nav aria-label="Sales Pagination">
+
+                        <ul class="pagination justify-content-center align-items-center mb-0">
+
+                            <!-- Previous -->
+                            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+
+                                <a class="page-link rounded-pill px-3 shadow-sm"
+                                   asp-action="Index"
+                                   asp-route-page="@(ViewBag.CurrentPage - 1)">
+
+                                    <i class="bi bi-chevron-left"></i>
+                                    Previous
+
+                                </a>
+
+                            </li>
+
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item mx-1">
+
+                                    <a class="page-link rounded-circle shadow-sm @(i == ViewBag.CurrentPage ? "active-page" : "")"
+                                       asp-action="Index"
+                                       asp-route-page="@i">
+
+                                        @i
+
+                                    </a>
+
+                                </li>
+                            }
+
+                            <!-- Next -->
+                            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+
+                                <a class="page-link rounded-pill px-3 shadow-sm"
+                                   asp-action="Index"
+                                   asp-route-page="@(ViewBag.CurrentPage + 1)">
+
+                                    Next
+                                    <i class="bi bi-chevron-right"></i>
+
+                                </a>
+
+                            </li>
+
+                        </ul>
+
+                        <!-- Page Info -->
+                        <div class="text-center mt-2">
+
+                            <small class="text-muted fw-semibold">
+                                Page @ViewBag.CurrentPage of @ViewBag.TotalPages
+                            </small>
+
+                        </div>
+
+                    </nav>
+
+                </div>
+            }
+
         </div>
 
     </div>
@@ -249,3 +317,57 @@
     if (paymentFilter) paymentFilter.addEventListener("change", filterTable);
     if (dateFilter) dateFilter.addEventListener("change", filterTable);
 </script>
+<style>
+
+    /* Pagination Container */
+    .pagination {
+        gap: 4px;
+    }
+
+        /* Default Page Link */
+        .pagination .page-link {
+            border: none;
+            color: #198754;
+            font-weight: 600;
+            min-width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .25s ease;
+        }
+
+            /* Hover */
+            .pagination .page-link:hover {
+                background: #198754;
+                color: white;
+                transform: translateY(-2px);
+            }
+
+    /* Active Page */
+    .active-page {
+        background: #198754 !important;
+        color: white !important;
+        border-color: #198754 !important;
+        box-shadow: 0 4px 12px rgba(25,135,84,.35);
+    }
+
+    /* Disabled */
+    .pagination .disabled .page-link {
+        background: #f5f5f5;
+        color: #999;
+        pointer-events: none;
+        box-shadow: none;
+    }
+
+    /* Responsive */
+    @@media(max-width:768px) {
+
+        .pagination .page-link {
+            min-width: 36px;
+            height: 36px;
+            font-size: 14px;
+        }
+    }
+
+</style>
