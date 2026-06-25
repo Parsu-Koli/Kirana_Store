@@ -4,12 +4,14 @@
     ViewData["Title"] = "Edit Sale";
 }
 
-<div class="container mt-4">
+<div class="container-fluid mt-4">
 
-    <h2 class="text-warning fw-bold mb-4">✏️ Edit Sale & Customer</h2>
+    <h2 class="page-title text-warning">
+        ✏️ Edit Sale & Customer
+    </h2>
 
-    <div class="card shadow border-0">
-        <div class="card-body p-4">
+    <div class="glass-card">
+        <div class="p-4">
 
             <form asp-action="Edit" method="post" id="saleForm">
 
@@ -73,8 +75,10 @@
                         </div>
                     </div>
 
+
                     <!-- CUSTOMER DETAILS -->
                     <div class="col-md-6">
+                        <div class="glass-section">
                         <h4 class="text-primary mb-3">Customer Details</h4>
                         <input type="hidden" asp-for="Sale.CustomerId" />
 
@@ -94,6 +98,7 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 <hr />
 
@@ -101,7 +106,7 @@
                 <h5 class="fw-bold mb-3">Sale Items</h5>
 
                 <table class="table table-bordered align-middle">
-                    <thead class="table-light">
+                    <thead>
                         <tr>
                             <th>Product</th>
                             <th width="120">Qty</th>
@@ -208,3 +213,68 @@
         });
     </script>
 }
+
+<style>
+    .glass-card {
+        background: rgba(255,255,255,.08);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        box-shadow: 0 10px 35px rgba(0,0,0,.08);
+        padding: 10px;
+    }
+
+    .glass-section {
+        background: rgba(255,255,255,.05);
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .form-control,
+    .form-select {
+        background: rgba(255,255,255,.08) !important;
+        border: none !important;
+        border-radius: 14px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255,255,255,.15) !important;
+            box-shadow: 0 0 20px rgba(59,130,246,.15);
+            border: none !important;
+        }
+
+    .table {
+        background: transparent !important;
+    }
+
+        .table th {
+            background: rgba(255,255,255,.15);
+            border: none !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .table td {
+            background: rgba(255,255,255,.04);
+            border: none !important;
+        }
+
+    .btn-warning {
+        border-radius: 14px;
+        padding: 10px 25px;
+        box-shadow: 0 6px 20px rgba(245,158,11,.25);
+    }
+
+    .btn-secondary {
+        border-radius: 14px;
+    }
+
+    .page-title {
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 25px;
+    }
+</style>

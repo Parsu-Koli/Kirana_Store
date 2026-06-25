@@ -5,19 +5,19 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-success m-0">Sales List</h2>
 
-        <a href="/Sale/Create" class="btn btn-success shadow fw-bold">
+        <a href="/Sale/Create" class="btn btn-success fw-bold">
             + Add New Sale
         </a>
     </div>
 
-    <div class="card shadow border-0">
+    <div class="card mt-4 shadow-sm border-0">
 
         <div class="card-header bg-success text-light fw-bold">
             Sales Records
         </div>
 
         <!-- 🌟 SEARCH + FILTER BAR -->
-        <div class="p-3 border-bottom bg-light">
+        <div class="p-3 border-bottom">
 
             <div class="row g-2">
 
@@ -50,7 +50,7 @@
         <!-- END SEARCH BAR -->
 
         <div class="card mt-4 shadow-sm border-0">
-            <div class="card-body bg-light rounded-3">
+            <div class="card-body rounded-3">
 
                 <div class="d-flex align-items-center justify-content-between flex-wrap">
 
@@ -156,7 +156,7 @@
 
             @if (ViewBag.TotalPages > 1)
             {
-                <div class="card-footer bg-white border-0 py-3">
+                <div class="card-footer border-0 py-3">
 
                     <nav aria-label="Sales Pagination">
 
@@ -228,8 +228,67 @@
 </div>
 
 <style>
+    .card {
+        background: rgba(255,255,255,0.08) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: none !important;
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(0,0,0,.08) !important;
+    }
+
     .card-body.bg-light {
-        background: linear-gradient(135deg, #f8fdf9, #eefaf1);
+        background: transparent !important;
+    }
+
+    .table {
+        background: transparent !important;
+        color: #1f2937;
+    }
+
+        .table th {
+            background: rgba(255,255,255,.15) !important;
+            backdrop-filter: blur(15px);
+            border: none !important;
+        }
+
+        .table td {
+            background: rgba(255,255,255,.04);
+            border: none !important;
+        }
+
+    .form-control,
+    .form-select {
+        background: rgba(255,255,255,.12);
+        backdrop-filter: blur(12px);
+        border: none;
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255,255,255,.18);
+            box-shadow: 0 0 20px rgba(59,130,246,.15);
+            border: none;
+        }
+
+    .card-header {
+        background: transparent !important;
+        border: none !important;
+        color: #111827 !important;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    #Body {
+        background: rgba(255,255,255,.10);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: none;
+        border-radius: 28px;
+        box-shadow: 0 15px 45px rgba(0,0,0,.08);
+        padding: 25px;
     }
 </style>
 

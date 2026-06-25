@@ -2,37 +2,705 @@
 
 @{
     ViewData["Title"] = "Stock Dashboard";
+    
+    var totalSalesAmount = ViewBag.TotalSalesAmount ?? 0;
+    var totalSales = ViewBag.TotalSales ?? 0;
+    var totalCustomers = ViewBag.TotalCustomers ?? 0;
+    var totalProfit = ViewBag.TotalProfit ?? 0;
+    var salesOverview = ViewBag.SalesOverview ?? new List<dynamic>();
+    var salesByPaymentMode = ViewBag.SalesByPaymentMode ?? new List<dynamic>();
+    var recentSales = ViewBag.RecentSales as List<KiranaStoreUI.Models.Sale> ?? new List<KiranaStoreUI.Models.Sale>();
+
 }
 
-<h2 class="mb-4 text-success">📊 Stock Dashboard</h2>
+<div class="container-fluid px-3">
 
-<!-- ================= CIRCLE SUMMARY (TOP) ================= -->
-<div class="row mb-4">
-    <div class="col-md-6 offset-md-3">
-        <canvas id="stockSummary"></canvas>
+    <div class="dashboard-header">
+        <div class="title-section">
+            <h2 class="dashboard-title">
+                <i class="bi bi-speedometer2"></i>
+                Dashboard
+            </h2>
+
+            <p class="dashboard-subtitle">
+                Inventory & Sales Analytics Overview
+            </p>
+        </div>
+
+        <div class="dashboard-badge">
+            <i class="bi bi-graph-up-arrow"></i>
+            Live Dashboard
+        </div>
     </div>
+    <!-- KPI CARDS -->
+    <div class="row g-3 mb-4">
+
+        <!-- Total Products -->
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card product-card">
+                <div class="icon-circle">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <h3 id="totalProducts">0</h3>
+                <span>Total Products</span>
+            </div>
+        </div>
+
+        <!-- Low Stock -->
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card low-card">
+                <div class="icon-circle">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                <h3 id="lowCount">0</h3>
+                <span>Low Stock</span>
+            </div>
+        </div>
+
+        <!-- Medium Stock -->
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card medium-card">
+                <div class="icon-circle">
+                    <i class="bi bi-bar-chart-fill"></i>
+                </div>
+                <h3 id="mediumCount">0</h3>
+                <span>Medium Stock</span>
+            </div>
+        </div>
+
+        <!-- High Stock -->
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card high-card">
+                <div class="icon-circle">
+                    <i class="bi bi-check-circle-fill"></i>
+                </div>
+                <h3 id="highCount">0</h3>
+                <span>High Stock</span>
+            </div>
+        </div>
+
+   
+
+        <!-- Profit -->
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card profit-card">
+                <div class="icon-circle">
+                    <i class="bi bi-cash-stack"></i>
+                </div>
+                <h3>₹@totalProfit.ToString("N2")</h3>
+                <span>Total Profit</span>
+            </div>
+        </div>
+
+        <!-- Sales -->
+       <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card sales-card">
+                <div class="icon-circle">
+                    <i class="bi bi-cart-check-fill"></i>
+                </div>
+                <h3>₹@totalSalesAmount</h3>
+                <span>Total Sales</span>
+            </div>
+        </div>
+
+    </div>
+    <div class="row g-3 mb-4">
+
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card customer-card">
+                <div class="icon-circle">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h3>@totalCustomers</h3>
+                <span>Customers</span>
+            </div>
+        </div>
+
+        <div class="col-lg-2 col-md-4 col-6">
+            <div class="glass-card kpi-card order-card">
+                <div class="icon-circle">
+                    <i class="bi bi-bag-check-fill"></i>
+                </div>
+                <h3>@totalSales</h3>
+                <span>Orders</span>
+            </div>
+        </div>
+
+        <div class="col-lg-4" style="margin-left:417px;">
+            <div class="glass-card summary-card">
+                <canvas id="stockSummary"></canvas>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- TOP ROW -->
+
+    <div class="row g-4" style="margin-top:-230px;">
+
+        <!-- ALL STOCK -->
+
+        <div class="col-lg-8">
+
+            <div class="glass-card chart-card">
+
+                <canvas id="allStock"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOTTOM CHARTS -->
+
+    <div class="row g-4 mt-2">
+
+        <div class="col-md-6">
+
+            <div class="glass-card chart-card">
+                <canvas id="lowStock"></canvas>
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="glass-card chart-card">
+                <canvas id="mediumStock"></canvas>
+            </div>
+
+        </div>
+
+        <div class="col-md-12">
+
+            <div class="glass-card chart-card">
+                <canvas id="highStock"></canvas>
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<!-- ================= BAR CHARTS ================= -->
-<div class="row g-4">
-    <div class="col-md-6">
-        <canvas id="allStock"></canvas>
+    <!-- Sales Overview and Payment Mode -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+        <div class="glass-card h-100">
+            <div class="glass-body">
+                    <h5>Sales Overview (Last 7 Days)</h5>
+                    <canvas id="salesOverviewChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+        <div class="glass-card h-100">
+            <div class="glass-body">
+                    <h5>Sales by Payment Mode</h5>
+                    <canvas id="paymentModeChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <canvas id="lowStock"></canvas>
+
+    <!-- Recent Sales -->
+    <div class="row mt-4">
+        <div class="col">
+        <div class="glass-card h-100">
+            <div class="glass-body">
+                    <h5>Recent Sales</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr class="text-black">
+                                <th class="text-black">Invoice</th>
+                                <th class="text-black">Customer</th>
+                                <th class="text-black">Amount</th>
+                                <th class="text-black">Date</th>
+                                <th class="text-black">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (recentSales.Any())
+                            {
+                                foreach (var sale in recentSales)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="invoice-badge text-black">
+                                                @sale.InvoiceNumber
+                                            </span>
+                                        </td>
+
+                                        <td class="text-black">
+                                            @(sale.Customer?.Name ?? "N/A")
+                                        </td>
+
+                                        <td class="fw-bold text-success">
+                                            ₹@sale.NetAmount
+                                        </td>
+
+                                        <td class="text-black">
+                                            @sale.SaleDate.ToString("dd-MM-yyyy")
+                                        </td>
+
+                                        <td>
+                                            <span class="status-badge">
+                                                Completed
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        No recent sales found
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <canvas id="mediumStock"></canvas>
-    </div>
-    <div class="col-md-6">
-        <canvas id="highStock"></canvas>
-    </div>
-</div>
+
+<style>
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding: 20px 25px;
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,.2);
+        box-shadow: 0 8px 25px rgba(0,0,0,.1);
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        color: #212529;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+        .dashboard-title i {
+            color: #0d6efd;
+            animation: pulseGlow 2s infinite;
+        }
+
+    .dashboard-subtitle {
+        margin: 5px 0 0;
+        color: #6c757d;
+        font-size: .95rem;
+    }
+
+    .dashboard-badge {
+        background: linear-gradient(135deg,#00c853,#64dd17);
+        color: white;
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-weight: 600;
+        box-shadow: 0 0 20px rgba(0,200,83,.4);
+    }
+
+    @@keyframes pulseGlow {
+        0%
+
+    {
+        transform: scale(1);
+        text-shadow: 0 0 5px #0d6efd;
+    }
+
+    50% {
+        transform: scale(1.1);
+        text-shadow: 0 0 20px #0d6efd;
+    }
+
+    100% {
+        transform: scale(1);
+        text-shadow: 0 0 5px #0d6efd;
+    }
+
+    }
+    /* Glass Table */
+
+    .glass-table {
+        color: #fff;
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0 12px;
+    }
+
+        .glass-table thead th {
+            background: rgba(255,255,255,0.08);
+            color: #ffffff;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+            letter-spacing: .5px;
+        }
+
+        .glass-table tbody tr {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: .3s ease;
+        }
+
+            .glass-table tbody tr:hover {
+                background: rgba(255,255,255,0.12);
+                transform: translateY(-2px);
+                box-shadow: 0 0 20px rgba(255,255,255,0.08), 0 0 25px rgba(34,197,94,.15);
+            }
+
+        .glass-table td {
+            padding: 18px;
+            border: none;
+            vertical-align: middle;
+            color: white;
+        }
+
+        /* Rounded Row Effect */
+
+        .glass-table tbody tr td:first-child {
+            border-radius: 14px 0 0 14px;
+        }
+
+        .glass-table tbody tr td:last-child {
+            border-radius: 0 14px 14px 0;
+        }
+
+    /* Invoice Badge */
+
+    .invoice-badge {
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.15);
+        padding: 6px 12px;
+        border-radius: 10px;
+        font-size: .9rem;
+        color: white;
+    }
+
+    /* Status Badge */
+
+    .status-badge {
+        background: rgba(34,197,94,.18);
+        color: #22c55e;
+        padding: 6px 14px;
+        border-radius: 50px;
+        font-size: .85rem;
+        font-weight: 600;
+        border: 1px solid rgba(34,197,94,.3);
+    }
+
+    /* Responsive */
+
+    .table-responsive {
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    /* Glass Card */
+
+    .glass-card {
+        position: relative;
+        overflow: hidden;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(0,0,0,.25), inset 0 1px 1px rgba(255,255,255,.2);
+        transition: .3s ease;
+    }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient( 90deg, transparent, rgba(255,255,255,.18), transparent );
+            transform: skewX(-20deg);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(34,197,94,.35), 0 10px 40px rgba(0,0,0,.3);
+        }
+
+            .glass-card:hover::before {
+                left: 150%;
+                transition: 1s;
+            }
+
+    .glass-body {
+        padding: 25px;
+    }
+
+    /* Dashboard Title */
+
+    .dashboard-title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        color: black;
+        margin-bottom: 30px;
+    }
+
+    /* KPI Cards */
+
+    .kpi-card {
+        min-height: 95px;
+        padding: 12px;
+    }
+
+    .icon-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+
+    .kpi-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .kpi-card span {
+        font-size: 0.8rem;
+    }
+
+    .kpi-card {
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+        padding: 30px 20px;
+        border-radius: 24px;
+        transition: all .4s ease;
+        border: 1px solid rgba(255,255,255,.18);
+    }
+
+        .kpi-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .kpi-card h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-top: 12px;
+            margin-bottom: 6px;
+            color: white;
+        }
+
+        .kpi-card span {
+            color: rgba(255,255,255,.85);
+            font-size: .95rem;
+        }
+
+    .icon-circle {
+        width: 65px;
+        height: 65px;
+        margin: auto;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+        color: white;
+        backdrop-filter: blur(10px);
+    }
+
+    .product-card {
+        background: linear-gradient(135deg,#4facfe,#00f2fe);
+        box-shadow: 0 0 25px rgba(79,172,254,.4);
+    }
+
+    .low-card {
+        background: linear-gradient(135deg,#ff416c,#ff4b2b);
+        box-shadow: 0 0 25px rgba(255,75,43,.4);
+    }
+
+    .medium-card {
+        background: linear-gradient(135deg,#f7971e,#ffd200);
+        box-shadow: 0 0 25px rgba(255,210,0,.4);
+    }
+
+    .high-card {
+        background: linear-gradient(135deg,#00b09b,#96c93d);
+        box-shadow: 0 0 25px rgba(0,176,155,.4);
+    }
+
+    .profit-card {
+        background: linear-gradient(135deg,#11998e,#38ef7d);
+        box-shadow: 0 0 25px rgba(56,239,125,.4);
+    }
+
+    .sales-card {
+        background: linear-gradient(135deg,#667eea,#764ba2);
+        box-shadow: 0 0 25px rgba(118,75,162,.4);
+    }
+
+    .customer-card {
+        background: linear-gradient(135deg,#ff9966,#ff5e62);
+        box-shadow: 0 0 25px rgba(255,94,98,.4);
+    }
+
+    .order-card {
+        background: linear-gradient(135deg,#36d1dc,#5b86e5);
+        box-shadow: 0 0 25px rgba(91,134,229,.4);
+    }
+
+    .icon-circle {
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.3);
+    }
+
+    .product-card:hover,
+    .low-card:hover,
+    .medium-card:hover,
+    .high-card:hover,
+    .profit-card:hover,
+    .sales-card:hover,
+    .customer-card:hover,
+    .order-card:hover {
+        box-shadow: 0 0 40px rgba(255,255,255,.3);
+    }
+
+    /* Chart Cards */
+
+    .chart-card {
+        min-height: 420px;
+    }
+
+    .summary-card {
+        min-height: 420px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Titles */
+
+    .glass-title {
+        color: white;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    /* Table */
+
+    .glass-table {
+        color: white;
+    }
+
+        .glass-table thead {
+            background: rgba(255,255,255,.08);
+        }
+
+        .glass-table th {
+            color: #4ade80;
+            border-bottom: 1px solid rgba(255,255,255,.15);
+        }
+
+        .glass-table td {
+            border-color: rgba(255,255,255,.08);
+        }
+
+        .glass-table tbody tr:hover {
+            background: rgba(255,255,255,.05);
+        }
+
+    /* KPI Colors */
+
+    .text-danger {
+        color: #ff5f7a !important;
+    }
+
+    .text-warning {
+        color: #facc15 !important;
+    }
+
+    .text-success {
+        color: #22c55e !important;
+    }
+</style>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+           const salesOverview = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(salesOverview));
+           const salesByPaymentMode = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(salesByPaymentMode));
+
+           // Sales Overview Chart
+           const salesOverviewLabels = salesOverview.map(s => s.Date);
+           const salesOverviewData = salesOverview.map(s => s.TotalSales);
+
+           new Chart(document.getElementById('salesOverviewChart'), {
+               type: 'line',
+               data: {
+                   labels: salesOverviewLabels,
+                   datasets: [{
+                       label: 'Sales',
+                       data: salesOverviewData,
+                       borderColor: '#007bff',
+                       backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                       fill: true
+                   }]
+               },
+               options: {
+                   responsive: true,
+                   plugins: {
+                       legend: { display: false },
+                       title: {
+                           display: true,
+                           text: 'Sales Overview (Last 7 Days)'
+                       }
+                   },
+                   scales: {
+                       y: { beginAtZero: true }
+                   }
+               }
+           });
+
+           // Sales by Payment Mode Chart
+           const paymentModeLabels = salesByPaymentMode.map(s => s.PaymentMode);
+           const paymentModeData = salesByPaymentMode.map(s => s.Count);
+
+           new Chart(document.getElementById('paymentModeChart'), {
+               type: 'doughnut',
+               data: {
+                   labels: paymentModeLabels,
+                   datasets: [{
+                       data: paymentModeData,
+                       backgroundColor: ['#28a745', '#007bff', '#ffc107', '#dc3545']
+                   }]
+               },
+               options: {
+                   responsive: true,
+                   plugins: {
+                       legend: { position: 'bottom' },
+                       title: {
+                           display: true,
+                           text: 'Sales by Payment Mode'
+                       }
+                   }
+               }
+           });
+   
+
         const products = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
         console.log(products);
 
@@ -147,5 +815,19 @@
                 }
             }
         });
+ 
+
+  
+         document.getElementById("totalProducts").innerText =
+            products.length;
+
+        document.getElementById("lowCount").innerText =
+            low.length;
+
+        document.getElementById("mediumCount").innerText =
+            medium.length;
+
+        document.getElementById("highCount").innerText =
+            high.length;
     </script>
 }

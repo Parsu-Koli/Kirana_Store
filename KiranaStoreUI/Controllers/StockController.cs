@@ -51,8 +51,88 @@ namespace KiaranaStroreUI.Controllers
         {
             var client = CreateClientWithToken();
 
-            var products = await client
-                .GetFromJsonAsync<List<ProductStockDto>>("Product/GetProducts");
+            var products =
+await client.GetFromJsonAsync<List<ProductStockDto>>
+("Product/GetProducts")
+?? new List<ProductStockDto>();
+            var allSales =
+await client.GetFromJsonAsync<List<Sale>>
+("Sale/GetAllSales")
+?? new List<Sale>();
+            var customers =
+await client.GetFromJsonAsync<List<Customer>>
+("Customer/GetCustomers")
+?? new List<Customer>();
+
+            // Calculate metrics
+            var totalSalesAmount = allSales.Sum(s => s.NetAmount);
+            var totalSales = allSales.Count;
+            var totalCustomers = customers.Count;
+            decimal totalProfit = 0;
+
+            foreach (var sale in allSales)
+            {
+                if (sale.SaleItems == null)
+                    continue;
+
+                foreach (var item in sale.SaleItems)
+                {
+                    var product = products
+                        .FirstOrDefault(p => p.ProductId == item.ProductId);
+
+                    decimal purchasePrice =
+                        product?.PurchasePrice ?? 0;
+
+                    totalProfit +=
+                        (item.Price - purchasePrice)
+                        * item.Quantity;
+                }
+            }
+            // Sales overview (last 7 days)
+            var last7Days = Enumerable.Range(0, 7)
+                .Select(i => DateTime.Now.Date.AddDays(-i))
+                .OrderBy(d => d)
+                .ToList();
+
+            var salesOverview = last7Days.Select(date => new SalesOverviewDto
+            {
+                Date = date.ToString("MMM dd"),
+                TotalSales = allSales
+        .Where(s => s.SaleDate.Date == date)
+        .Sum(s => s.NetAmount)
+            }).ToList();
+
+            // Sales by payment mode
+            var salesByPaymentMode = allSales
+.GroupBy(s => s.PaymentMode)
+.Select(g => new PaymentModeDto
+{
+    PaymentMode = g.Key,
+    Count = g.Count()
+})
+.ToList();
+
+            // Recent sales
+            var recentSales = allSales
+    .OrderByDescending(s => s.SaleDate)
+    .Take(5)
+    .ToList();
+
+            // Attach customer data manually
+            foreach (var sale in recentSales)
+            {
+                sale.Customer = customers
+                    .FirstOrDefault(c => c.CustomerId == sale.CustomerId);
+            }
+
+            // Pass data to the view
+            ViewBag.TotalSalesAmount = totalSalesAmount;
+            ViewBag.TotalSales = totalSales;
+            ViewBag.TotalCustomers = totalCustomers;
+            ViewBag.TotalProfit = totalProfit;
+            ViewBag.SalesOverview = salesOverview;
+            ViewBag.SalesByPaymentMode = salesByPaymentMode;
+            ViewBag.RecentSales = recentSales;
 
             return View(products);
         }
