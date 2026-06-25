@@ -1,10 +1,10 @@
 ﻿@model KiranaStoreUI.Models.ViewModels.SaleCustomerVM
 
-<div class="container mt-4">
+<div class="container-fluid px-4 mt-3">
 
     <h2 class="text-success fw-bold mb-4">➕ Add Sale & Customer</h2>
 
-    <div class="card shadow border-0">
+    <div class="card">
         <div class="card-body p-4">
 
             <form method="post" id="saleForm">
@@ -889,3 +889,179 @@
 
     }, 1000);
 </script>
+
+<style>
+    /* ==================================
+       PAGE
+    ================================== */
+
+    .container {
+        max-width: 98% !important;
+    }
+
+    /* ==================================
+       GLASS CARD
+    ================================== */
+
+    .card {
+        background: rgba(255,255,255,.08) !important;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: none !important;
+        border-radius: 25px !important;
+        box-shadow: 0 10px 35px rgba(0,0,0,.08) !important;
+    }
+
+    /* ==================================
+       SECTION HEADINGS
+    ================================== */
+
+    h2 {
+        font-weight: 700;
+        text-shadow: 0 2px 10px rgba(0,0,0,.05);
+    }
+
+    h4 {
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+    /* ==================================
+       INPUTS
+    ================================== */
+
+    .form-control,
+    .form-select {
+        background: rgba(255,255,255,.12) !important;
+        backdrop-filter: blur(15px);
+        border: none !important;
+        border-radius: 14px;
+        min-height: 45px;
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+        .form-control:focus,
+        .form-select:focus {
+            background: rgba(255,255,255,.18) !important;
+            border: none !important;
+            box-shadow: 0 0 20px rgba(59,130,246,.15);
+        }
+
+    /* ==================================
+       INPUT GROUP
+    ================================== */
+
+    .input-group-text {
+        background: rgba(255,255,255,.12) !important;
+        border: none !important;
+        backdrop-filter: blur(15px);
+    }
+
+    /* ==================================
+       SEARCH RESULTS
+    ================================== */
+
+    .list-group-item {
+        background: rgba(255,255,255,.08) !important;
+        backdrop-filter: blur(15px);
+        border: none !important;
+        border-radius: 12px !important;
+        margin-bottom: 5px;
+    }
+
+        .list-group-item:hover {
+            background: rgba(255,255,255,.18) !important;
+        }
+
+    /* ==================================
+       PRODUCT CARDS
+    ================================== */
+
+    #selectedProducts .list-group-item {
+        background: rgba(255,255,255,.10) !important;
+        backdrop-filter: blur(20px);
+        border: none !important;
+        border-radius: 18px !important;
+        box-shadow: 0 6px 20px rgba(0,0,0,.05);
+        padding: 18px;
+    }
+
+    /* ==================================
+       BUTTONS
+    ================================== */
+
+    .btn {
+        border: none !important;
+        border-radius: 14px !important;
+        font-weight: 600;
+    }
+
+    .btn-success {
+        box-shadow: 0 8px 20px rgba(25,135,84,.20);
+    }
+
+    .btn-primary {
+        box-shadow: 0 8px 20px rgba(13,110,253,.20);
+    }
+
+    .btn-secondary {
+        box-shadow: 0 8px 20px rgba(108,117,125,.15);
+    }
+
+    /* ==================================
+       MODAL
+    ================================== */
+
+    .modal-content {
+        background: rgba(255,255,255,.12);
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        border: none;
+        border-radius: 25px;
+        box-shadow: 0 15px 45px rgba(0,0,0,.15);
+    }
+
+    .modal-header,
+    .modal-body {
+        border: none;
+    }
+
+    /* ==================================
+       ALERTS
+    ================================== */
+
+    .alert {
+        border: none;
+        border-radius: 14px;
+        backdrop-filter: blur(15px);
+    }
+
+    /* ==================================
+       HR
+    ================================== */
+
+    hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient( to right, transparent, rgba(0,0,0,.15), transparent );
+    }
+
+    /* ==================================
+       PRODUCT SEARCH DROPDOWN
+    ================================== */
+
+    #searchResult {
+        background: transparent;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    /* ==================================
+       SCANNER
+    ================================== */
+
+    #reader {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+</style>
