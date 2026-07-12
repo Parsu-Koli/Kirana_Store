@@ -20,17 +20,17 @@
 
             //Local Api Link
 
-            //builder.Services.AddHttpClient("api", client =>
-            //{
-            //    client.BaseAddress = new Uri("https://localhost:7262/api/");
-            //});
+            builder.Services.AddHttpClient("api", client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:7262/api/");
+            });
 
             //Server Api Link
 
-            builder.Services.AddHttpClient("api", client =>
-            {
-                client.BaseAddress = new Uri("https://kirana-store-repo.onrender.com/api/");
-            });
+            //builder.Services.AddHttpClient("api", client =>
+            //{
+            //    client.BaseAddress = new Uri("https://kirana-store-repo.onrender.com/api/");
+            //});
 
             builder.Services.AddAuthentication("Cookies")
                 .AddCookie("Cookies", options =>

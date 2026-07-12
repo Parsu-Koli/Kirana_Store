@@ -85,6 +85,7 @@ namespace KiranaStore
             builder.Services.AddScoped<ISaleRepository, SaleRepository>();
             builder.Services.AddScoped<IStockRepository, StockRepository>();
             builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+            builder.Services.AddScoped<IGSTRegistrationRepository, GstRegistrationRepository>();
 
             // Services
             builder.Services.AddScoped<AuthService>();
@@ -100,6 +101,7 @@ namespace KiranaStore
             builder.Services.AddScoped<SaleService>();
             builder.Services.AddScoped<StockService>();
             builder.Services.AddScoped<SupplierService>();
+            builder.Services.AddScoped<GstRegistrationService>();
 
             // 🔐 JWT Authentication (SAFE FIXES ADDED)
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

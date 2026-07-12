@@ -21,6 +21,15 @@ namespace KiranaStoreUI.Models
         [Range(0, double.MaxValue, ErrorMessage = "Discount cannot be negative")]
         public decimal Discount { get; set; }
 
+        [Range(0, double.MaxValue)]
+        public decimal TotalGST { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal CGST { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal SGST { get; set; }
+
         [Range(0, double.MaxValue, ErrorMessage = "Net Amount cannot be negative")]
         public decimal NetAmount { get; set; }
 

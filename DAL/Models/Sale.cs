@@ -38,5 +38,14 @@ namespace DAL.Models
                 return new ValidationResult("Sale Date cannot be in the future");
             return ValidationResult.Success;
         }
+
+        [Range(0, double.MaxValue)]
+        public decimal TotalGST { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal CGST { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal SGST { get; set; }
     }
 }

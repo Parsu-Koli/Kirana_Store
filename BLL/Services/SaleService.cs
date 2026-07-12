@@ -1,7 +1,6 @@
 ﻿using DAL.Models;
 using DAL.Repository.Interface;
 using DAL.Repository.Interfaces;
-using System.ComponentModel.DataAnnotations;
 
 namespace BLL.Services
 {
@@ -9,11 +8,16 @@ namespace BLL.Services
     {
         private readonly ISaleRepository _saleRepo;
         private readonly IProductRepository _productRepo;
+        private readonly IGSTRegistrationRepository _gstRepo;
 
-        public SaleService(ISaleRepository saleRepo, IProductRepository productRepo)
+        public SaleService(
+            ISaleRepository saleRepo,
+            IProductRepository productRepo,
+            IGSTRegistrationRepository gstRepo)
         {
             _saleRepo = saleRepo;
             _productRepo = productRepo;
+            _gstRepo = gstRepo;
         }
 
         public void AddSale(Sale sale)
@@ -27,20 +31,68 @@ namespace BLL.Services
             sale.SaleDate = DateTime.UtcNow;
             sale.InvoiceNumber = GenerateInvoiceNumber();
 
+            // Default GST values
+            sale.TotalGST = 0;
+            sale.CGST = 0;
+            sale.SGST = 0;
+
+            // Check whether GST is enabled
+            var gstRegistration = _gstRepo.GetActiveRegistration();
+
+            bool applyGST =
+                gstRegistration != null &&
+                gstRegistration.IsGstEnabled;
+
             foreach (var item in sale.SaleItems)
             {
                 var product = _productRepo.GetById(item.ProductId);
+
                 if (product == null)
                     throw new Exception("Product not found.");
 
                 if (product.QuantityInStock < item.Quantity)
                     throw new Exception("Insufficient stock.");
 
+                // Reduce stock
                 product.QuantityInStock -= item.Quantity;
                 _productRepo.Update(product);
 
+                // Prevent circular reference
                 item.Sale = null;
+
+                // Apply GST only if enabled
+                if (applyGST)
+                {
+                    decimal gstAmount =
+                        (item.Price * item.Quantity * product.GstPercentage) / 100m;
+
+                    sale.TotalGST += gstAmount;
+
+                    item.GstPercentage = product.GstPercentage;
+                    item.GstAmount = gstAmount;
+                }
+                else
+                {
+                    item.GstPercentage = 0;
+                    item.GstAmount = 0;
+                }
             }
+
+            // Split GST
+            if (applyGST)
+            {
+                sale.CGST = sale.TotalGST / 2m;
+                sale.SGST = sale.TotalGST / 2m;
+            }
+            else
+            {
+                sale.TotalGST = 0;
+                sale.CGST = 0;
+                sale.SGST = 0;
+            }
+
+            // Calculate final amount
+            sale.NetAmount = sale.TotalAmount + sale.TotalGST - sale.Discount;
 
             _saleRepo.Add(sale);
         }
@@ -61,7 +113,8 @@ namespace BLL.Services
         public Sale GetSale(int saleId)
         {
             var sale = _saleRepo.GetById(saleId);
-            if (sale == null) return null;
+            if (sale == null)
+                return null;
 
             _saleRepo.LoadSaleItems(sale);
             LoadProductsForSaleItems(sale);
@@ -71,9 +124,13 @@ namespace BLL.Services
 
         private void LoadProductsForSaleItems(Sale sale)
         {
-            if (sale.SaleItems == null || sale.SaleItems.Count == 0) return;
+            if (sale.SaleItems == null || sale.SaleItems.Count == 0)
+                return;
 
-            var productIds = sale.SaleItems.Select(si => si.ProductId).ToList();
+            var productIds = sale.SaleItems
+                                 .Select(si => si.ProductId)
+                                 .ToList();
+
             var products = _productRepo.GetAll()
                                        .Where(p => productIds.Contains(p.ProductId))
                                        .ToDictionary(p => p.ProductId, p => p);
@@ -109,16 +166,14 @@ namespace BLL.Services
         public void UpdateSale(Sale sale)
         {
             if (sale.SaleId <= 0)
-                throw new Exception("Invalid category ID.");
+                throw new Exception("Invalid Sale ID.");
 
             _saleRepo.UpdateSale(sale);
-
         }
 
         public void Delete(int id)
         {
             _saleRepo.Delete(id);
-
         }
 
         public IQueryable<Sale> GetSalesQueryable()
