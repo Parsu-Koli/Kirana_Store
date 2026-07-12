@@ -42,6 +42,8 @@ namespace DAL.Data
         // ------------------- AUDIT LOG -------------------
         public DbSet<AuditLog> AuditLogs { get; set; }
 
+        public DbSet<GstRegistration> GstRegistrations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -155,6 +157,9 @@ namespace DAL.Data
             // -------- AuditLog --------
             modelBuilder.Entity<AuditLog>()
                 .HasKey(a => a.AuditId);
+
+            modelBuilder.Entity<GstRegistration>()
+                .HasKey(a => a.GstRegistrationId);
         }
     }
 }

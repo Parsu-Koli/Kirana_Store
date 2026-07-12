@@ -24,6 +24,12 @@ namespace KiranaStoreUI.Models
         [Range(0, double.MaxValue, ErrorMessage = "Price cannot be negative")]
         public decimal Price { get; set; }
 
+        [Range(0, 100)]
+        public decimal GstPercentage { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal GstAmount { get; set; }
+
         [Range(0, double.MaxValue, ErrorMessage = "Total cannot be negative")]
         public decimal Total { get; set; }  // Can be auto-calculated
 

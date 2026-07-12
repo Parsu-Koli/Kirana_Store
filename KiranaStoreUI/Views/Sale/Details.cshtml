@@ -104,11 +104,17 @@
         <table class="receipt-table">
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Item</th>
-                    <th>Qty</th>
-                    <th>Rate</th>
-                    <th>Total</th>
+                   <th>#</th>
+<th>Item</th>
+<th>Qty</th>
+<th>Rate</th>
+<th>Total</th>
+
+@if (Model.TotalGST > 0)
+{
+    <th>GST %</th>
+    <th>GST Amt</th>
+}
                 </tr>
             </thead>
             <tbody>
@@ -117,10 +123,16 @@
                     var item = Model.SaleItems[i];
                     <tr>
                         <td>@(i + 1)</td>
-                        <td>@item.Product?.ProductName</td>
-                        <td>@item.Quantity</td>
-                        <td>₹@item.Price</td>
-                        <td>₹@item.Total</td>
+<td>@item.Product?.ProductName</td>
+<td>@item.Quantity</td>
+<td>₹@item.Price</td>
+<td>₹@item.Total</td>
+
+@if (Model.TotalGST > 0)
+{
+    <td>@item.GstPercentage %</td>
+    <td>₹@item.GstAmount</td>
+}
                     </tr>
                 }
             </tbody>
@@ -131,11 +143,28 @@
         <div class="alert alert-warning text-center">No items found.</div>
     }
     <!-- PAYMENT INFO -->
-    <h4>💳 Payment Info</h4>
-    <div><strong>Mode:</strong> @Model.PaymentMode</div>
-    <div><strong>Total:</strong> ₹@Model.TotalAmount</div>
-    <div><strong>Discount:</strong> ₹@Model.Discount</div>
-    <div><strong>Net Amount:</strong> ₹@Model.NetAmount</div>
+<h4>💳 Payment Info</h4>
+
+<div><strong>Mode:</strong> @Model.PaymentMode</div>
+
+<div><strong>Sub Total:</strong> ₹@Model.TotalAmount</div>
+
+@if (Model.TotalGST > 0)
+{
+    <div><strong>CGST:</strong> ₹@Model.CGST</div>
+
+    <div><strong>SGST:</strong> ₹@Model.SGST</div>
+
+    <div><strong>Total GST:</strong> ₹@Model.TotalGST</div>
+}
+
+<div><strong>Discount:</strong> ₹@Model.Discount</div>
+
+<hr />
+
+<div style="font-size:18px;font-weight:bold;">
+    Net Amount : ₹@Model.NetAmount
+</div>
 
 
 

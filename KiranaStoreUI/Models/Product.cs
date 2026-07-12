@@ -49,5 +49,9 @@ namespace KiranaStoreUI.Models
 
         [MaxLength(50)]
         public string? Barcode { get; set; }
+
+        [Range(0, 100, ErrorMessage = "GST Percentage must be between 0 and 100")]
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal GstPercentage { get; set; } = 0;
     }
 }

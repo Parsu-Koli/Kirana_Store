@@ -1,0 +1,248 @@
+﻿@model IEnumerable<KiranaStoreUI.Models.GstRegistration>
+
+@{
+    ViewData["Title"] = "GST Registration";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg,#eef2f7,#dbeafe,#f8fafc);
+        min-height: 100vh;
+    }
+
+    .glass-card {
+        background: rgba(255,255,255,0.55);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255,255,255,0.7);
+        border-radius: 20px;
+        box-shadow: 0 10px 35px rgba(0,0,0,.12);
+    }
+
+    .page-title {
+        color: #1f2937;
+        font-weight: 700;
+    }
+
+    .glass-table {
+        margin-bottom: 0;
+        color: #374151;
+        background: transparent;
+    }
+
+        .glass-table thead {
+            background: rgba(255,255,255,.7);
+        }
+
+            .glass-table thead th {
+                color: #111827;
+                border-color: rgba(0,0,0,.08);
+                font-weight: 600;
+            }
+
+        .glass-table tbody tr {
+            background: rgba(255,255,255,.35);
+            transition: .3s;
+        }
+
+            .glass-table tbody tr:hover {
+                background: rgba(255,255,255,.7);
+                transform: scale(1.002);
+            }
+
+        .glass-table td,
+        .glass-table th {
+            border-color: rgba(0,0,0,.08);
+            vertical-align: middle;
+        }
+
+    .badge-enabled {
+        background: rgba(25,135,84,.15);
+        color: #198754;
+        border: 1px solid rgba(25,135,84,.25);
+        padding: 7px 14px;
+        border-radius: 30px;
+        font-weight: 600;
+    }
+
+    .badge-disabled {
+        background: rgba(220,53,69,.12);
+        color: #dc3545;
+        border: 1px solid rgba(220,53,69,.25);
+        padding: 7px 14px;
+        border-radius: 30px;
+        font-weight: 600;
+    }
+
+    .btn-glass {
+        border-radius: 30px;
+        font-weight: 600;
+        padding: 8px 20px;
+    }
+
+    .btn-warning {
+        color: white;
+    }
+
+    .table-responsive {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .glass-card .btn-success {
+        background: linear-gradient(135deg,#22c55e,#16a34a);
+        border: none;
+    }
+
+        .glass-card .btn-success:hover {
+            background: linear-gradient(135deg,#16a34a,#15803d);
+        }
+
+    .btn-warning {
+        background: linear-gradient(135deg,#f59e0b,#d97706);
+        border: none;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg,#ef4444,#dc2626);
+        border: none;
+    }
+
+        .btn-warning:hover,
+        .btn-danger:hover,
+        .btn-success:hover {
+            transform: translateY(-2px);
+            transition: .25s;
+        }
+
+    .table td,
+    .table th {
+        padding: 14px;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <div class="glass-card p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h3 class="page-title">
+                <i class="bi bi-receipt-cutoff"></i>
+                GST Registration
+            </h3>
+
+            <a asp-action="Create" class="btn btn-success btn-glass">
+                <i class="bi bi-plus-circle"></i>
+                Add GST Registration
+            </a>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table glass-table table-bordered align-middle">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Business</th>
+
+                        <th>GST Number</th>
+
+                        <th>Owner</th>
+
+                        <th>State</th>
+
+                        <th>Mobile</th>
+
+                        <th>Status</th>
+
+                        <th width="170">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>@item.BusinessName</td>
+
+                                <td>@item.GstNumber</td>
+
+                                <td>@item.OwnerName</td>
+
+                                <td>@item.State</td>
+
+                                <td>@item.MobileNumber</td>
+
+                                <td>
+
+                                    @if (item.IsGstEnabled)
+                                    {
+                                        <span class="badge badge-enabled">
+                                            Enabled
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-disabled">
+                                            Disabled
+                                        </span>
+                                    }
+
+                                </td>
+
+                                <td>
+
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.GstRegistrationId"
+                                       class="btn btn-warning btn-sm">
+
+                                        <i class="bi bi-pencil-square"></i>
+
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.GstRegistrationId"
+                                       onclick="return confirm('Delete this GST Registration?')"
+                                       class="btn btn-danger btn-sm">
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+
+                            <td colspan="7" class="text-center">
+
+                                No GST Registration Found
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>

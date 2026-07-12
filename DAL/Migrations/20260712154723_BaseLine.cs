@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAL.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class BaseLine : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,6 +52,29 @@ namespace DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Customers", x => x.CustomerId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GstRegistrations",
+                columns: table => new
+                {
+                    GstRegistrationId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GstNumber = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    BusinessName = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
+                    OwnerName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Address = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: true),
+                    State = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    StateCode = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    PinCode = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    Email = table.Column<string>(type: "text", nullable: true),
+                    MobileNumber = table.Column<string>(type: "text", nullable: true),
+                    IsGstEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GstRegistrations", x => x.GstRegistrationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,7 +139,10 @@ namespace DAL.Migrations
                     PurchasePrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     SellingPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     QuantityInStock = table.Column<decimal>(type: "numeric", nullable: false),
-                    Active = table.Column<bool>(type: "boolean", nullable: false)
+                    ExpiryDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Active = table.Column<bool>(type: "boolean", nullable: false),
+                    Barcode = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    GstPercentage = table.Column<decimal>(type: "numeric(5,2)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -141,7 +167,10 @@ namespace DAL.Migrations
                     Discount = table.Column<decimal>(type: "numeric", nullable: false),
                     NetAmount = table.Column<decimal>(type: "numeric", nullable: false),
                     PaymentMode = table.Column<string>(type: "text", nullable: false),
-                    SaleDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    SaleDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    TotalGST = table.Column<decimal>(type: "numeric", nullable: false),
+                    CGST = table.Column<decimal>(type: "numeric", nullable: false),
+                    SGST = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -279,7 +308,9 @@ namespace DAL.Migrations
                     ProductId = table.Column<int>(type: "integer", nullable: false),
                     Quantity = table.Column<decimal>(type: "numeric", nullable: false),
                     Price = table.Column<decimal>(type: "numeric", nullable: false),
-                    Total = table.Column<decimal>(type: "numeric", nullable: false)
+                    Total = table.Column<decimal>(type: "numeric", nullable: false),
+                    GstPercentage = table.Column<decimal>(type: "numeric", nullable: false),
+                    GstAmount = table.Column<decimal>(type: "numeric", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -393,6 +424,9 @@ namespace DAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AuditLogs");
+
+            migrationBuilder.DropTable(
+                name: "GstRegistrations");
 
             migrationBuilder.DropTable(
                 name: "OrderItems");

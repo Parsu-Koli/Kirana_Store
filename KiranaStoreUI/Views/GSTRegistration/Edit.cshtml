@@ -1,0 +1,229 @@
+﻿@model KiranaStoreUI.Models.GstRegistration
+
+@{
+    ViewData["Title"] = "Edit GST Registration";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg,#f8fafc,#eef2f7,#ffffff);
+        min-height: 100vh;
+    }
+
+    .glass-card {
+        background: rgba(255,255,255,0.75);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        border: 1px solid rgba(255,255,255,.8);
+        border-radius: 22px;
+        box-shadow: 0 12px 40px rgba(0,0,0,.12);
+    }
+
+        .glass-card h3,
+        .glass-card h5,
+        .glass-card label {
+            color: #1f2937;
+            font-weight: 600;
+        }
+
+    .form-control,
+    .form-select,
+    textarea {
+        background: rgba(255,255,255,.65);
+        border: 1px solid rgba(0,0,0,.08);
+        border-radius: 12px;
+        color: #212529;
+        transition: .3s;
+    }
+
+        .form-control:focus,
+        .form-select:focus,
+        textarea:focus {
+            background: white;
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+            color: #212529;
+        }
+
+        .form-control::placeholder,
+        textarea::placeholder {
+            color: #6c757d;
+        }
+
+    .form-check-label {
+        color: #212529;
+        font-weight: 600;
+    }
+
+    .form-check-input {
+        width: 3rem;
+        height: 1.5rem;
+        cursor: pointer;
+    }
+
+    .btn {
+        border-radius: 30px;
+        font-weight: 600;
+        padding: 10px 30px;
+    }
+
+    .btn-warning {
+        color: #fff;
+    }
+
+        .btn-warning:hover {
+            color: #fff;
+        }
+
+    hr {
+        opacity: .15;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+        font-size: .9rem;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-9">
+
+            <div class="glass-card p-4">
+
+                <h3 class="mb-4">
+                    <i class="bi bi-pencil-square"></i>
+                    Edit GST Registration
+                </h3>
+
+                <form asp-action="Edit" method="post">
+
+                    <input asp-for="GstRegistrationId" type="hidden" />
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <h5 class="mb-3">Business Information</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="BusinessName"></label>
+                            <input asp-for="BusinessName" class="form-control" />
+                            <span asp-validation-for="BusinessName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="GstNumber"></label>
+                            <input asp-for="GstNumber" class="form-control" />
+                            <span asp-validation-for="GstNumber" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="OwnerName"></label>
+                            <input asp-for="OwnerName" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="MobileNumber"></label>
+                            <input asp-for="MobileNumber" class="form-control" />
+                        </div>
+
+                    </div>
+
+                    <hr class="text-light">
+
+                    <h5 class="mb-3">Address Information</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Address"></label>
+                            <textarea asp-for="Address"
+                                      rows="3"
+                                      class="form-control"></textarea>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="State"></label>
+                            <input asp-for="State" class="form-control" />
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="StateCode"></label>
+                            <input asp-for="StateCode" class="form-control" />
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="PinCode"></label>
+                            <input asp-for="PinCode" class="form-control" />
+                        </div>
+
+                    </div>
+
+                    <hr class="text-light">
+
+                    <h5 class="mb-3">Contact</h5>
+
+                    <div class="row">
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 d-flex align-items-center">
+
+                            <div class="form-check form-switch mt-4">
+
+                                <input asp-for="IsGstEnabled"
+                                       class="form-check-input"
+                                       type="checkbox" />
+
+                                <label asp-for="IsGstEnabled"
+                                       class="form-check-label ms-2">
+                                    Enable GST Billing
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="text-center mt-4">
+
+                        <button type="submit"
+                                class="btn btn-warning px-5">
+
+                            <i class="bi bi-check-circle"></i>
+
+                            Update
+
+                        </button>
+
+                        <a asp-action="Index"
+                           class="btn btn-secondary px-5">
+
+                            Cancel
+
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

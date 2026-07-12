@@ -66,6 +66,9 @@ namespace DAL.Repository.Implementation
             existingSale.Discount = sale.Discount;
             existingSale.NetAmount = sale.NetAmount;
             existingSale.PaymentMode = sale.PaymentMode;
+            existingSale.TotalGST = sale.TotalGST;
+            existingSale.CGST = sale.CGST;
+            existingSale.SGST = sale.SGST;
             existingSale.SaleDate =
      DateTime.SpecifyKind(
          sale.SaleDate,

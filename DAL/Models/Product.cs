@@ -27,6 +27,9 @@ namespace DAL.Models
         [MaxLength(50)]
         public string? Barcode { get; set; }
 
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal GstPercentage { get; set; } = 0;
+
         [JsonIgnore]
         public Category? Category { get; set; }
     }

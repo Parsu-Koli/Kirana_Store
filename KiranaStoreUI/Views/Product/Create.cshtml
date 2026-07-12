@@ -65,7 +65,23 @@
                         <label class="form-label fw-bold">Barcode Number</label>
                         <input asp-for="Barcode" class="form-control border-dark shadow-none" />
                     </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">GST Percentage</label>
 
+                        <select asp-for="GstPercentage"
+                                class="form-select border-dark shadow-none">
+
+                            <option value="0">0% (Exempt)</option>
+                            <option value="5">5%</option>
+                            <option value="12">12%</option>
+                            <option value="18">18%</option>
+                            <option value="28">28%</option>
+
+                        </select>
+
+                        <span asp-validation-for="GstPercentage"
+                              class="text-danger"></span>
+                    </div>
                     <div class="col-12">
                         <label class="form-label fw-bold">Description</label>
                         <textarea asp-for="Description" class="form-control border-dark shadow-none"></textarea>
