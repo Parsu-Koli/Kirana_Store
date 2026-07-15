@@ -87,7 +87,9 @@
                 <div class="icon-circle">
                     <i class="bi bi-cash-stack"></i>
                 </div>
-                <h3>₹@totalProfit.ToString("N2")</h3>
+                <h3 class="amount-text">
+                    @FormatAmount(Convert.ToDecimal(totalProfit))
+                </h3>
                 <span>Total Profit</span>
             </div>
         </div>
@@ -98,7 +100,9 @@
                 <div class="icon-circle">
                     <i class="bi bi-cart-check-fill"></i>
                 </div>
-                <h3>₹@totalSalesAmount</h3>
+                <h3 class="amount-text">
+                    @FormatAmount(Convert.ToDecimal(totalSalesAmount))
+                </h3>
                 <span>Total Sales</span>
             </div>
         </div>
@@ -829,5 +833,21 @@
 
         document.getElementById("highCount").innerText =
             high.length;
+
+                @functions {
+            public string FormatAmount(decimal amount)
+            {
+                    if (amount >= 10000000)
+                            return $"₹{amount / 10000000m:N2} Cr";
+
+                    if (amount >= 100000)
+                            return $"₹{amount / 100000m:N2} L";
+
+                    if (amount >= 1000)
+                            return $"₹{amount / 1000m:N2} K";
+
+                    return $"₹{amount:N2}";
+            }
+    }
     </script>
 }
