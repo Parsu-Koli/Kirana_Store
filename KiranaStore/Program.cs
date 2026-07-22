@@ -162,6 +162,10 @@ namespace KiranaStore
             app.UseHttpsRedirection();
 
             // 🔴 ORDER IS CORRECT (do not change)
+Console.WriteLine("Issuer : " + builder.Configuration["Jwt:Issuer"]);
+Console.WriteLine("Audience : " + builder.Configuration["Jwt:Audience"]);
+Console.WriteLine("Key : " + builder.Configuration["Jwt:Key"]);
+            
             app.UseAuthentication();
             app.UseCors("AllowMVC");
             app.UseAuthorization();
