@@ -28,9 +28,14 @@
             //Server Api Link
 
             builder.Services.AddHttpClient("api", client =>
-            {
-                client.BaseAddress = new Uri("https://kirana-store-repo.onrender.com/api/");
-            });
+{
+    var apiBaseUrl = builder.Configuration["ApiSettings:BaseUrl"];
+
+    if (string.IsNullOrWhiteSpace(apiBaseUrl))
+        throw new Exception("API Base URL is missing.");
+
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
 
             builder.Services.AddAuthentication("Cookies")
                 .AddCookie("Cookies", options =>
