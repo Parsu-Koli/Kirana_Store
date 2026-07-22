@@ -1,33 +1,81 @@
 ﻿@model KiranaStoreUI.Models.Category
-
 @{
     ViewData["Title"] = "Category Details";
 }
+<div class="form-page-wrap">
 
-<h2 class="mb-4 text-primary fw-bold">
-    <i class="bi bi-info-circle-fill"></i> Category Details
-</h2>
+    <h2 class="mb-4 text-primary fw-bold page-title">
+        <i class="bi bi-info-circle-fill me-2"></i> Category Details
+    </h2>
 
-<div class="card shadow-lg border-0 rounded-4">
-    <div class="card-body p-4">
-
-        <div class="mb-3">
-            <h5 class="text-secondary"><i class="bi bi-hash"></i> Category ID</h5>
-            <div class="fs-5 fw-semibold">@Model.CategoryId</div>
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+            <div class="mb-3">
+                <h5 class="text-secondary detail-label"><i class="bi bi-hash"></i> Category ID</h5>
+                <div class="fs-5 fw-semibold detail-value">@Model.CategoryId</div>
+            </div>
+            <hr />
+            <div class="mb-3">
+                <h5 class="text-secondary detail-label"><i class="bi bi-tag-fill"></i> Category Name</h5>
+                <div class="fs-5 fw-semibold detail-value">@Model.CategoryName</div>
+            </div>
         </div>
-
-        <hr />
-
-        <div class="mb-3">
-            <h5 class="text-secondary"><i class="bi bi-tag-fill"></i> Category Name</h5>
-            <div class="fs-5 fw-semibold">@Model.CategoryName</div>
-        </div>
-
     </div>
+
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary btn-lg shadow back-btn">
+            <i class="bi bi-arrow-left-circle"></i> Back
+        </a>
+    </div>
+
 </div>
 
-<div class="mt-4">
-    <a asp-action="Index" class="btn btn-secondary btn-lg shadow">
-        <i class="bi bi-arrow-left-circle"></i> Back
-    </a>
-</div>
+<style>
+
+    /* Keeps the details panel from stretching edge-to-edge on wide
+           desktop monitors, while staying full-width on mobile/tablet */
+    .form-page-wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        display: flex;
+        align-items: center;
+    }
+
+    .detail-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 1rem;
+        margin-bottom: 6px;
+    }
+
+    .detail-value {
+        word-break: break-word;
+    }
+
+    /* ===================================
+           Responsive tweaks (mobile / tablet)
+        =================================== */
+
+    @@media (max-width: 575.98px) {
+
+        .page-title {
+            font-size: 1.35rem;
+        }
+
+        .card-body.p-4 {
+            padding: 20px !important;
+        }
+
+        .fs-5 {
+            font-size: 1.05rem !important;
+        }
+
+        .back-btn {
+            width: 100%;
+        }
+    }
+</style>

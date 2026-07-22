@@ -1,34 +1,89 @@
 ﻿@model KiranaStoreUI.Models.Category
-
 @{
     ViewData["Title"] = "Edit Category";
 }
+<div class="form-page-wrap">
 
-<h2 class="mb-4 text-primary fw-bold">
-    <i class="bi bi-pencil-square"></i> Edit Category
-</h2>
+    <h2 class="mb-4 text-primary fw-bold page-title">
+        <i class="bi bi-pencil-square me-2"></i> Edit Category
+    </h2>
 
-<div class="card shadow-lg border-0 rounded-4 p-4">
-    <form asp-action="Edit" method="post">
+    <div class="card shadow-lg border-0 rounded-4 p-4">
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="CategoryId" />
+            <div class="mb-3">
+                <label class="form-label fw-semibold">
+                    <i class="bi bi-tag"></i> Category Name
+                </label>
+                <input asp-for="CategoryName" class="form-control form-control-lg shadow-sm" autofocus />
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+            <div class="mt-4 form-actions">
+                <button type="submit" class="btn btn-primary btn-lg shadow">
+                    <i class="bi bi-save"></i> Update
+                </button>
+                <a asp-action="Index" class="btn btn-secondary btn-lg shadow">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+        </form>
+    </div>
 
-        <input type="hidden" asp-for="CategoryId" />
-
-        <div class="mb-3">
-            <label class="form-label fw-semibold">
-                <i class="bi bi-tag"></i> Category Name
-            </label>
-            <input asp-for="CategoryName" class="form-control form-control-lg shadow-sm" />
-            <span asp-validation-for="CategoryName" class="text-danger"></span>
-        </div>
-
-        <div class="mt-4 d-flex gap-3">
-            <button type="submit" class="btn btn-primary btn-lg shadow">
-                <i class="bi bi-save"></i> Update
-            </button>
-
-            <a asp-action="Index" class="btn btn-secondary btn-lg shadow">
-                <i class="bi bi-arrow-left"></i> Back
-            </a>
-        </div>
-    </form>
 </div>
+
+<style>
+
+    /* Keeps a single-field form from stretching edge-to-edge on wide
+           desktop monitors, while staying full-width on mobile/tablet */
+    .form-page-wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        display: flex;
+        align-items: center;
+    }
+
+    #CategoryName:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 .2rem rgba(13,110,253,.15);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+        .form-actions .btn {
+            flex: 1 1 auto;
+        }
+
+    /* ===================================
+           Responsive tweaks (mobile / tablet)
+        =================================== */
+
+    @@media (max-width: 575.98px) {
+
+        .page-title {
+            font-size: 1.35rem;
+        }
+
+        .card.p-4 {
+            padding: 20px !important;
+        }
+        /* Stack Update/Back full-width and easy to tap on phones */
+        .form-actions {
+            flex-direction: column;
+        }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

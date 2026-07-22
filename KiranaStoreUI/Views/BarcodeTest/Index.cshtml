@@ -2,39 +2,89 @@
     ViewData["Title"] = "Barcode Scanner";
 }
 
-<h2>Barcode Scanner Test</h2>
+<div class="container-fluid px-3 px-md-4 mt-4">
 
-<div class="row">
-    <div class="col-md-6">
+    <h2 class="mb-4 scanner-heading">📷 Barcode Scanner Test</h2>
 
-        <div id="reader"></div>
+    <div class="row g-3">
+        <div class="col-12 col-md-6">
 
-        <div class="mt-3">
-            <label>Scanned Barcode</label>
+            <div id="reader" class="scanner-box"></div>
 
-            <input type="text"
-                   id="barcode"
-                   class="form-control"
-                   readonly />
+            <div class="mt-3">
+                <label class="fw-bold">Scanned Barcode</label>
+                <input type="text"
+                       id="barcode"
+                       class="form-control"
+                       readonly />
+            </div>
         </div>
-
     </div>
+
+    <hr />
+
+    <div id="productResult"></div>
+
 </div>
 
-<hr />
+<style>
+    .scanner-heading {
+        font-size: 24px;
+        font-weight: 700;
+    }
 
-<div id="productResult"></div>
+    /* ============================
+           SCANNER BOX — RESPONSIVE
+           ============================ */
+    .scanner-box {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    /* ⚠️ Do NOT force width/height on #reader video or canvas — html5-qrcode
+           positions its scan-box overlay using the video's native pixel size.
+           Resizing the video with CSS misaligns the overlay with the actual feed.
+           Only constrain the outer wrapper; let the library size its own video. */
+    #reader {
+        border: none !important;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+
+        #reader img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #reader select,
+        #reader button {
+            width: 100%;
+            margin: 4px 0 !important;
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+    @@media (max-width: 767.98px) {
+        .scanner-heading {
+            font-size: 19px;
+            text-align: center;
+        }
+
+        .scanner-box {
+            max-width: 100%;
+        }
+
+        #productResult .alert {
+            font-size: 14px;
+            text-align: center;
+        }
+    }
+</style>
 
 <script src="https://unpkg.com/html5-qrcode"></script>
-
 <script>
-
-    <script src="https://unpkg.com/html5-qrcode"></script>
-
-<script>
-
-    function onScanSuccess(decodedText)
-    {
+    function onScanSuccess(decodedText) {
         document.getElementById("barcode").value = decodedText;
 
         fetch('/BarcodeTest/SaveBarcode', {
@@ -47,30 +97,33 @@
             })
         })
         .then(() => {
-
             document.getElementById("productResult").innerHTML =
                 "<div class='alert alert-success'>Barcode Sent To Laptop</div>";
-
         })
         .catch(() => {
-
             document.getElementById("productResult").innerHTML =
                 "<div class='alert alert-danger'>Failed To Send Barcode</div>";
-
         });
     }
 
-    function onScanFailure(error)
-    {
+    function onScanFailure(error) {
         // ignore
+    }
+
+    // ✅ Responsive qrbox: smaller scan box on narrow (mobile) viewports
+    function getQrboxSize() {
+        const width = window.innerWidth;
+        if (width < 480) return 180;
+        if (width < 768) return 220;
+        return 250;
     }
 
     let html5QrcodeScanner =
         new Html5QrcodeScanner(
             "reader",
             {
-                fps: 30,
-                qrbox: 250
+                fps: 10,
+                qrbox: getQrboxSize()
             },
             false
         );
@@ -79,7 +132,4 @@
         onScanSuccess,
         onScanFailure
     );
-
-</script>
-
 </script>

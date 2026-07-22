@@ -1,13 +1,12 @@
 ﻿@model List<KiranaStoreUI.Models.ViewModels.SaleProfitVM>
-
 @{
     ViewData["Title"] = "Profit By Date Range";
     decimal totalProfit = Model?.Sum(x => x.Profit) ?? 0m;
 }
-
-<div class="container mt-5">
-
-    <h2 class="mb-4 text-success fw-bold"><i class="bi bi-currency-rupee"></i> Profit By Date Range</h2>
+<div class="container-fluid px-3 px-md-4 mt-4 mt-md-5">
+    <h2 class="mb-4 text-success fw-bold page-heading">
+        <i class="bi bi-currency-rupee"></i> Profit By Date Range
+    </h2>
 
     <!-- ---------------- Date Range Picker Card ---------------- -->
     <div class="card shadow-sm mb-4">
@@ -16,29 +15,28 @@
         </div>
         <div class="card-body">
             <form method="get" class="row g-3 align-items-end">
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <label for="startDate" class="form-label fw-semibold">Start Date</label>
                     <input type="date" id="startDate" name="startDate" class="form-control"
                            value="@ViewBag.StartDate" required />
                 </div>
-                <div class="col-md-3">
+                <div class="col-12 col-sm-6 col-md-3">
                     <label for="endDate" class="form-label fw-semibold">End Date</label>
                     <input type="date" id="endDate" name="endDate" class="form-control"
                            value="@ViewBag.EndDate" required />
                 </div>
-                <div class="col-md-2">
+                <div class="col-12 col-sm-6 col-md-2">
                     <button type="submit" class="btn btn-success w-100">
                         <i class="bi bi-search"></i> Get Profit
                     </button>
                 </div>
-
                 @* Total Profit Card next to button *@
                 @if (Model != null && Model.Any())
                 {
-                    <div class="col-md-3">
+                    <div class="col-12 col-sm-6 col-md-3">
                         <div class="card text-center border-success shadow-sm">
-                            <div class="card-body">
-                                <h6 class="card-title text-success fw-bold">Total Profit</h6>
+                            <div class="card-body py-2">
+                                <h6 class="card-title text-success fw-bold mb-1">Total Profit</h6>
                                 <span class="fs-4 fw-bold text-success">₹ @totalProfit</span>
                             </div>
                         </div>
@@ -55,8 +53,8 @@
             <div class="card-header bg-success text-white fw-bold">
                 <i class="bi bi-table"></i> Sales Details
             </div>
-            <div class="card-body table-responsive">
-                <table class="table table-striped table-hover align-middle">
+            <div class="card-body table-responsive p-0 p-md-3">
+                <table class="table table-striped table-hover align-middle mb-0 profit-table">
                     <thead class="table-success text-dark">
                         <tr>
                             <th>Invoice</th>
@@ -76,7 +74,7 @@
                                 <td>@sale.PurchasePrice</td>
                                 <td>@sale.SellingPrice</td>
                                 <td>@sale.Total</td>
-                                <td> @sale.Profit</td>
+                                <td>@sale.Profit</td>
                             </tr>
                         }
                     </tbody>
@@ -92,3 +90,57 @@
         </div>
     }
 </div>
+
+<style>
+    /* ============================
+           RESPONSIVE BREAKPOINTS
+           ============================ */
+    .profit-table {
+        min-width: 640px; /* scrolls horizontally on small screens instead of squeezing columns */
+    }
+
+    @@media (max-width: 991.98px) {
+        .page-heading {
+            font-size: 22px;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .page-heading {
+            font-size: 19px;
+        }
+
+        .card-header {
+            font-size: 15px;
+        }
+
+        .profit-table th,
+        .profit-table td {
+            font-size: 13px;
+            padding: 8px 6px;
+        }
+
+        .fs-4 {
+            font-size: 1.1rem !important;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .container-fluid {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .page-heading {
+            font-size: 17px;
+        }
+
+        .card-body {
+            padding: 12px;
+        }
+
+        .profit-table {
+            min-width: 560px;
+        }
+    }
+</style>

@@ -3,6 +3,7 @@
 <style>
     /* RECEIPT BOX CENTERED */
     #receiptContainer {
+        width: 100%;
         max-width: 380px;
         margin: 40px auto; /* CENTER BOX */
         font-family: "Courier New", monospace;
@@ -11,6 +12,7 @@
         border: 1px dashed #999;
         border-radius: 8px;
         text-align: left; /* INNER CONTENT LEFT */
+        box-sizing: border-box;
     }
 
         #receiptContainer h2,
@@ -36,16 +38,26 @@
         color: #555;
     }
 
+    /* ✅ WRAP TABLE SO EXTRA GST COLUMNS DON'T BREAK LAYOUT ON NARROW PHONES */
+    .receipt-table-wrap {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
     table.receipt-table {
         width: 100%;
+        min-width: 320px;
         text-align: center;
+        border-collapse: collapse;
     }
 
         table.receipt-table th,
         table.receipt-table td {
             font-size: 13px;
-            padding: 4px 0;
+            padding: 4px 3px;
             text-align: center;
+            word-break: break-word;
         }
 
     .total-row {
@@ -84,6 +96,44 @@
         }
     }
 
+    /* ============================
+       RESPONSIVE (SCREEN ONLY)
+       ============================ */
+    @@media (max-width: 480px) {
+        #receiptContainer {
+            margin: 16px auto;
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        #receiptContainer h2 {
+            font-size: 18px;
+        }
+
+        #receiptContainer h4 {
+            font-size: 15px;
+        }
+
+        table.receipt-table th,
+        table.receipt-table td {
+            font-size: 11px;
+            padding: 3px 2px;
+        }
+
+        .receipt-footer {
+            font-size: 11px;
+        }
+
+        div[style*="font-size:18px"] {
+            font-size: 15px !important;
+        }
+    }
+
+    @@media (max-width: 360px) {
+        table.receipt-table {
+            min-width: 280px;
+        }
+    }
 </style>
 
 <div id="receiptContainer">
@@ -101,42 +151,44 @@
 
     @if (Model.SaleItems != null && Model.SaleItems.Any())
     {
-        <table class="receipt-table">
-            <thead>
-                <tr>
-                   <th>#</th>
-<th>Item</th>
-<th>Qty</th>
-<th>Rate</th>
-<th>Total</th>
-
-@if (Model.TotalGST > 0)
-{
-    <th>GST %</th>
-    <th>GST Amt</th>
-}
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.SaleItems.Count; i++)
-                {
-                    var item = Model.SaleItems[i];
+        <div class="receipt-table-wrap">
+            <table class="receipt-table">
+                <thead>
                     <tr>
-                        <td>@(i + 1)</td>
-<td>@item.Product?.ProductName</td>
-<td>@item.Quantity</td>
-<td>₹@item.Price</td>
-<td>₹@item.Total</td>
+                       <th>#</th>
+    <th>Item</th>
+    <th>Qty</th>
+    <th>Rate</th>
+    <th>Total</th>
 
-@if (Model.TotalGST > 0)
-{
-    <td>@item.GstPercentage %</td>
-    <td>₹@item.GstAmount</td>
-}
+    @if (Model.TotalGST > 0)
+    {
+        <th>GST %</th>
+        <th>GST Amt</th>
+    }
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.SaleItems.Count; i++)
+                    {
+                        var item = Model.SaleItems[i];
+                        <tr>
+                            <td>@(i + 1)</td>
+    <td>@item.Product?.ProductName</td>
+    <td>@item.Quantity</td>
+    <td>₹@item.Price</td>
+    <td>₹@item.Total</td>
+
+    @if (Model.TotalGST > 0)
+    {
+        <td>@item.GstPercentage %</td>
+        <td>₹@item.GstAmount</td>
+    }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
     else
     {
@@ -176,7 +228,7 @@
     </div>
 
     <!-- BUTTONS -->
-    <div class="mt-3 d-flex justify-content-center gap-3 no-print">
+    <div class="mt-3 d-flex justify-content-center gap-3 no-print flex-wrap">
         <a href="/Sale/Index" class="btn btn-secondary btn-sm">Back</a>
         <button type="button" class="btn btn-primary btn-sm" onclick="printSale()">Print 🖨️</button>
     </div>

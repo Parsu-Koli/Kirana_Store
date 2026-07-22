@@ -1,37 +1,94 @@
 ﻿@model KiranaStoreUI.Models.Category
-
 @{
     ViewData["Title"] = "Create Category";
 }
+<div class="form-page-wrap">
 
-<h2 class="mb-4 text-success fw-bold">
-    <i class="bi bi-plus-circle-fill"></i> Create New Category
-</h2>
+    <h2 class="mb-4 text-success fw-bold page-title">
+        <i class="bi bi-plus-circle-fill me-2"></i> Create New Category
+    </h2>
 
-<div class="card shadow-lg border-0 rounded-4">
-    <div class="card-body p-4">
-
-        <form asp-action="Create" method="post">
-
-            <div class="mb-3">
-                <label class="form-label fw-semibold">
-                    <i class="bi bi-tag-fill"></i> Category Name
-                </label>
-                <input asp-for="CategoryName" class="form-control form-control-lg rounded-3" placeholder="Enter category name" />
-                <span asp-validation-for="CategoryName" class="text-danger"></span>
-            </div>
-
-            <div class="mt-4">
-                <button type="submit" class="btn btn-success btn-lg shadow me-3">
-                    <i class="bi bi-check-circle-fill"></i> Save
-                </button>
-
-                <a asp-action="Index" class="btn btn-secondary btn-lg shadow">
-                    <i class="bi bi-arrow-left-circle"></i> Back
-                </a>
-            </div>
-
-        </form>
-
+    <div class="card shadow-lg border-0 rounded-4 form-card">
+        <div class="card-body p-4">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">
+                        <i class="bi bi-tag-fill"></i> Category Name
+                    </label>
+                    <input asp-for="CategoryName" class="form-control form-control-lg rounded-3" placeholder="Enter category name" autofocus />
+                    <span asp-validation-for="CategoryName" class="text-danger"></span>
+                </div>
+                <div class="mt-4 form-actions">
+                    <button type="submit" class="btn btn-success btn-lg shadow">
+                        <i class="bi bi-check-circle-fill"></i> Save
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary btn-lg shadow">
+                        <i class="bi bi-arrow-left-circle"></i> Back
+                    </a>
+                </div>
+            </form>
+        </div>
     </div>
+
 </div>
+
+<style>
+
+    /* Keeps a single-field form from stretching edge-to-edge on wide
+           desktop monitors, while staying full-width on mobile/tablet */
+    .form-page-wrap {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-card {
+        background: rgba(255,255,255,.9);
+    }
+
+    #CategoryName:focus {
+        border-color: #22c55e;
+        box-shadow: 0 0 0 .2rem rgba(34,197,94,.15);
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+        .form-actions .btn {
+            flex: 1 1 auto;
+        }
+
+    /* ===================================
+           Responsive tweaks (mobile / tablet)
+        =================================== */
+
+    @@media (max-width: 575.98px) {
+
+        .page-title {
+            font-size: 1.35rem;
+        }
+
+        .form-card .card-body {
+            padding: 20px !important;
+        }
+        /* Stack Save/Back full-width and easy to tap on phones */
+        .form-actions {
+            flex-direction: column;
+        }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

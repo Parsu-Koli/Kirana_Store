@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Stock Dashboard";
-    
+
     var totalSalesAmount = ViewBag.TotalSalesAmount ?? 0;
     var totalSales = ViewBag.TotalSales ?? 0;
     var totalCustomers = ViewBag.TotalCustomers ?? 0;
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-   
+
 
         <!-- Profit -->
         <div class="col-lg-2 col-md-4 col-6">
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Sales -->
-       <div class="col-lg-2 col-md-4 col-6">
+        <div class="col-lg-2 col-md-4 col-6">
             <div class="glass-card kpi-card sales-card">
                 <div class="icon-circle">
                     <i class="bi bi-cart-check-fill"></i>
@@ -136,7 +136,7 @@
 
     <!-- TOP ROW -->
 
-    <div class="row g-4" style="margin-top:-230px;">
+    <div class="row g-4 offset-row">
 
         <!-- ALL STOCK -->
 
@@ -184,32 +184,36 @@
 
 </div>
 
-    <!-- Sales Overview and Payment Mode -->
-    <div class="row mt-4">
-        <div class="col-md-8">
-        <div class="glass-card h-100">
+<!-- Sales Overview and Payment Mode -->
+<div class="row mt-4 g-4">
+    <div class="col-lg-8">
+        <div class="glass-card">
             <div class="glass-body">
-                    <h5>Sales Overview (Last 7 Days)</h5>
+                <h5>Sales Overview (Last 7 Days)</h5>
+                <div class="chart-wrapper">
                     <canvas id="salesOverviewChart"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
-        <div class="glass-card h-100">
+    </div>
+    <div class="col-lg-4">
+        <div class="glass-card">
             <div class="glass-body">
-                    <h5>Sales by Payment Mode</h5>
+                <h5>Sales by Payment Mode</h5>
+                <div class="chart-wrapper">
                     <canvas id="paymentModeChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Recent Sales -->
-    <div class="row mt-4">
-        <div class="col">
+<!-- Recent Sales -->
+<div class="row mt-4">
+    <div class="col">
         <div class="glass-card h-100">
             <div class="glass-body">
-                    <h5>Recent Sales</h5>
+                <h5>Recent Sales</h5>
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead>
@@ -264,10 +268,10 @@
                         </tbody>
                     </table>
                 </div>
-                </div>
             </div>
         </div>
     </div>
+</div>
 
 <style>
 
@@ -275,6 +279,8 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
+        gap: 14px;
         margin-bottom: 25px;
         padding: 20px 25px;
         background: rgba(255,255,255,0.15);
@@ -312,26 +318,24 @@
         border-radius: 50px;
         font-weight: 600;
         box-shadow: 0 0 20px rgba(0,200,83,.4);
+        white-space: nowrap;
     }
 
     @@keyframes pulseGlow {
-        0%
+        0% {
+            transform: scale(1);
+            text-shadow: 0 0 5px #0d6efd;
+        }
 
-    {
-        transform: scale(1);
-        text-shadow: 0 0 5px #0d6efd;
-    }
+        50% {
+            transform: scale(1.1);
+            text-shadow: 0 0 20px #0d6efd;
+        }
 
-    50% {
-        transform: scale(1.1);
-        text-shadow: 0 0 20px #0d6efd;
-    }
-
-    100% {
-        transform: scale(1);
-        text-shadow: 0 0 5px #0d6efd;
-    }
-
+        100% {
+            transform: scale(1);
+            text-shadow: 0 0 5px #0d6efd;
+        }
     }
     /* Glass Table */
 
@@ -451,36 +455,9 @@
         padding: 25px;
     }
 
-    /* Dashboard Title */
-
-    .dashboard-title {
-        text-align: center;
-        font-size: 2rem;
-        font-weight: 700;
-        color: black;
-        margin-bottom: 30px;
-    }
-
-    /* KPI Cards */
-
-    .kpi-card {
-        min-height: 95px;
-        padding: 12px;
-    }
-
-    .icon-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-    }
-
-    .kpi-card h3 {
-        font-size: 1.2rem;
-    }
-
-    .kpi-card span {
-        font-size: 0.8rem;
-    }
+    /* KPI Cards (single, consolidated definition — mobile sizing
+           is handled via media queries further down instead of a
+           second conflicting rule block) */
 
     .kpi-card {
         position: relative;
@@ -488,6 +465,7 @@
         text-align: center;
         padding: 30px 20px;
         border-radius: 24px;
+        min-height: 95px;
         transition: all .4s ease;
         border: 1px solid rgba(255,255,255,.18);
     }
@@ -502,6 +480,9 @@
             margin-top: 12px;
             margin-bottom: 6px;
             color: white;
+            /* Long currency values (₹12,345.67) shrink to fit instead
+                   of overflowing the card on narrow columns */
+            word-break: break-word;
         }
 
         .kpi-card span {
@@ -520,6 +501,8 @@
         font-size: 28px;
         color: white;
         backdrop-filter: blur(10px);
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.3);
     }
 
     .product-card {
@@ -562,21 +545,16 @@
         box-shadow: 0 0 25px rgba(91,134,229,.4);
     }
 
-    .icon-circle {
-        background: rgba(255,255,255,.18);
-        border: 1px solid rgba(255,255,255,.3);
-    }
-
-    .product-card:hover,
-    .low-card:hover,
-    .medium-card:hover,
-    .high-card:hover,
-    .profit-card:hover,
-    .sales-card:hover,
-    .customer-card:hover,
-    .order-card:hover {
-        box-shadow: 0 0 40px rgba(255,255,255,.3);
-    }
+        .product-card:hover,
+        .low-card:hover,
+        .medium-card:hover,
+        .high-card:hover,
+        .profit-card:hover,
+        .sales-card:hover,
+        .customer-card:hover,
+        .order-card:hover {
+            box-shadow: 0 0 40px rgba(255,255,255,.3);
+        }
 
     /* Chart Cards */
 
@@ -590,6 +568,27 @@
         justify-content: center;
         align-items: center;
     }
+
+    /* Fixed-size box for Chart.js canvases that live inside cards
+           without their own explicit height (Sales Overview / Payment
+           Mode). Without this, "responsive:true + maintainAspectRatio:
+           false" inside an ambiguous h-100 parent creates a resize
+           feedback loop: canvas grows -> card grows -> row grows ->
+           canvas grows again, forever. A fixed height here gives
+           Chart.js's ResizeObserver a stable target so it stops. */
+    .chart-wrapper {
+        position: relative;
+        width: 100%;
+        height: 320px;
+    }
+
+        .chart-wrapper canvas {
+            max-width: 100%;
+        }
+
+    /* The "All Stock" chart row is deliberately pulled up on large
+           screens to sit flush under the KPI row (see .offset-row below,
+           scoped to desktop only so it never fights the mobile stack) */
 
     /* Titles */
 
@@ -635,6 +634,119 @@
     .text-success {
         color: #22c55e !important;
     }
+
+    /* ===================================
+           Responsive tweaks (mobile / tablet)
+           =================================== */
+
+    /* The -230px pull-up only makes sense on large screens where the
+           doughnut summary card sits beside two KPI rows. On tablet/mobile
+           the columns stack normally, so the offset must be removed or it
+           drags the "All Stock" chart up on top of the KPI cards above it. */
+    @@media (min-width: 992px) {
+        .offset-row {
+            margin-top: -230px;
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .offset-row {
+            margin-top: 0;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 16px 18px;
+        }
+
+        .dashboard-title {
+            font-size: 1.4rem;
+            gap: 8px;
+        }
+
+        .dashboard-subtitle {
+            font-size: .85rem;
+        }
+
+        .dashboard-badge {
+            font-size: .8rem;
+            padding: 8px 14px;
+        }
+
+        .glass-body {
+            padding: 15px;
+        }
+
+        .kpi-card {
+            padding: 16px 10px;
+            min-height: 110px;
+        }
+
+        .icon-circle {
+            width: 44px;
+            height: 44px;
+            font-size: 18px;
+        }
+
+        .kpi-card h3 {
+            font-size: 1.15rem;
+            margin-top: 8px;
+            margin-bottom: 4px;
+        }
+
+        .kpi-card span {
+            font-size: .75rem;
+        }
+
+        .chart-card,
+        .summary-card {
+            min-height: 280px;
+        }
+
+        .chart-wrapper {
+            height: 260px;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+
+        .dashboard-title {
+            font-size: 1.2rem;
+        }
+
+        .kpi-card h3 {
+            font-size: 1rem;
+        }
+
+        .icon-circle {
+            width: 38px;
+            height: 38px;
+            font-size: 16px;
+        }
+
+        .chart-card,
+        .summary-card {
+            min-height: 240px;
+        }
+
+        .chart-wrapper {
+            height: 220px;
+        }
+
+        .glass-body h5 {
+            font-size: 1rem;
+        }
+
+        .invoice-badge,
+        .status-badge {
+            font-size: .78rem;
+            padding: 4px 10px;
+        }
+    }
 </style>
 
 @section Scripts {
@@ -662,6 +774,7 @@
                },
                options: {
                    responsive: true,
+                   maintainAspectRatio: false,
                    plugins: {
                        legend: { display: false },
                        title: {
@@ -690,6 +803,7 @@
                },
                options: {
                    responsive: true,
+                   maintainAspectRatio: false,
                    plugins: {
                        legend: { position: 'bottom' },
                        title: {
@@ -699,7 +813,7 @@
                    }
                }
            });
-   
+
 
         const products = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model));
         console.log(products);
@@ -738,6 +852,7 @@
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         title: {
@@ -802,6 +917,7 @@
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 cutout: '65%',
                 plugins: {
                     title: {
@@ -815,9 +931,9 @@
                 }
             }
         });
- 
 
-  
+
+
          document.getElementById("totalProducts").innerText =
             products.length;
 

@@ -2,10 +2,10 @@
 
 <div class="container mt-4">
 
-    <div class="card shadow-lg border-0">
+    <div class="card shadow-lg border-0 rounded-4">
 
         <div class="card-header bg-success text-white fw-bold">
-            Add New Product
+            <i class="bi bi-box-seam me-2"></i> Add New Product
         </div>
 
         <div class="card-body">
@@ -19,13 +19,13 @@
                 <div class="row g-3">
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Product Name</label>
-                        <input asp-for="ProductName" class="form-control border-dark shadow-none" />
+                        <label class="form-label fw-bold"><i class="bi bi-tag-fill me-1"></i> Product Name</label>
+                        <input asp-for="ProductName" class="form-control border-dark shadow-none" autofocus />
                         <span asp-validation-for="ProductName" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Category</label>
+                        <label class="form-label fw-bold"><i class="bi bi-diagram-3-fill me-1"></i> Category</label>
                         <select asp-for="CategoryId" class="form-control border-dark shadow-none"
                                 asp-items="ViewBag.Categories">
                             <option value="">-- Select Category --</option>
@@ -34,39 +34,39 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Unit</label>
+                        <label class="form-label fw-bold"><i class="bi bi-rulers me-1"></i> Unit</label>
                         <input asp-for="Unit" class="form-control border-dark shadow-none" />
                         <span asp-validation-for="Unit" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Purchase Price</label>
-                        <input asp-for="PurchasePrice" class="form-control border-dark shadow-none" />
+                        <label class="form-label fw-bold"><i class="bi bi-currency-rupee me-1"></i> Purchase Price</label>
+                        <input asp-for="PurchasePrice" class="form-control border-dark shadow-none" inputmode="decimal" />
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Selling Price</label>
-                        <input asp-for="SellingPrice" class="form-control border-dark shadow-none" />
+                        <label class="form-label fw-bold"><i class="bi bi-currency-rupee me-1"></i> Selling Price</label>
+                        <input asp-for="SellingPrice" class="form-control border-dark shadow-none" inputmode="decimal" />
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Quantity In Stock</label>
-                        <input asp-for="QuantityInStock" class="form-control border-dark shadow-none" />
+                        <label class="form-label fw-bold"><i class="bi bi-box2-fill me-1"></i> Quantity In Stock</label>
+                        <input asp-for="QuantityInStock" class="form-control border-dark shadow-none" inputmode="numeric" />
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Expiry Date</label>
+                        <label class="form-label fw-bold"><i class="bi bi-calendar-event me-1"></i> Expiry Date</label>
                         <input asp-for="ExpiryDate" type="date"
                                class="form-control border-dark shadow-none" />
                         <span asp-validation-for="ExpiryDate" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">Barcode Number</label>
-                        <input asp-for="Barcode" class="form-control border-dark shadow-none" />
+                        <label class="form-label fw-bold"><i class="bi bi-upc-scan me-1"></i> Barcode Number</label>
+                        <input asp-for="Barcode" class="form-control border-dark shadow-none" inputmode="numeric" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label fw-bold">GST Percentage</label>
+                        <label class="form-label fw-bold"><i class="bi bi-percent me-1"></i> GST Percentage</label>
 
                         <select asp-for="GstPercentage"
                                 class="form-select border-dark shadow-none">
@@ -83,14 +83,19 @@
                               class="text-danger"></span>
                     </div>
                     <div class="col-12">
-                        <label class="form-label fw-bold">Description</label>
-                        <textarea asp-for="Description" class="form-control border-dark shadow-none"></textarea>
+                        <label class="form-label fw-bold"><i class="bi bi-file-text me-1"></i> Description</label>
+                        <textarea asp-for="Description" class="form-control border-dark shadow-none" rows="3"></textarea>
                     </div>
 
                 </div>
 
-                <div class="d-flex justify-content-end mt-4">
-                    <button class="btn btn-success px-4 fw-bold">Add Product</button>
+                <div class="mt-4 form-actions">
+                    <button class="btn btn-success px-4 fw-bold">
+                        <i class="bi bi-check-circle-fill me-1"></i> Add Product
+                    </button>
+                    <a href="/Product/Index" class="btn btn-secondary px-4 fw-bold">
+                        <i class="bi bi-arrow-left-circle me-1"></i> Back
+                    </a>
                 </div>
 
             </form>
@@ -99,6 +104,49 @@
 
     </div>
 </div>
+
+<style>
+
+    #ProductName:focus,
+    #Unit:focus,
+    #PurchasePrice:focus,
+    #SellingPrice:focus,
+    #QuantityInStock:focus,
+    #ExpiryDate:focus,
+    #Barcode:focus,
+    #Description:focus,
+    #CategoryId:focus,
+    #GstPercentage:focus {
+        border-color: #22c55e;
+        box-shadow: 0 0 0 .2rem rgba(34,197,94,.15);
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    /* ===================================
+           Responsive tweaks (mobile / tablet)
+        =================================== */
+
+    @@media (max-width: 575.98px) {
+
+        .card-body {
+            padding: 18px !important;
+        }
+        /* Stack Add/Back full-width and easy to tap on phones */
+        .form-actions {
+            flex-direction: column-reverse;
+        }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+    }
+</style>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

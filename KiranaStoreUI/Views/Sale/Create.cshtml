@@ -1,10 +1,10 @@
 ﻿@model KiranaStoreUI.Models.ViewModels.SaleCustomerVM
 
-<div class="container-fluid px-4 mt-3">
+<div class="container-fluid px-4 px-md-4 px-3 mt-3">
 
-    <h2 class="text-success fw-bold mb-4">➕ Add Sale & Customer</h2>
+    <h2 class="text-success fw-bold mb-4 page-title">➕ Add Sale & Customer</h2>
 
-    <div class="card">
+    <div class="card sale-card">
         <div class="card-body p-4">
 
             <form method="post" id="saleForm">
@@ -34,7 +34,7 @@
                         <div class="mb-3">
                             <label class="fw-bold">Discount</label>
                             <input asp-for="Sale.Discount" id="discount"
-                                   class="form-control text-end" />
+                                   class="form-control text-end" inputmode="decimal" />
                         </div>
 
                         <div class="mb-3">
@@ -114,7 +114,8 @@
 
                                 <input asp-for="Customer.Phone"
                                        class="form-control border-start-0 shadow-none"
-                                       placeholder="Enter customer phone number" />
+                                       placeholder="Enter customer phone number"
+                                       inputmode="tel" />
 
                             </div>
 
@@ -144,12 +145,12 @@
                                        placeholder="Search product name..." />
 
                                 <button type="button"
-                                        class="btn btn-success"
+                                        class="btn btn-success scan-btn"
                                         data-bs-toggle="modal"
                                         data-bs-target="#scannerModal">
 
                                     <i class="bi bi-upc-scan"></i>
-                                    Scan
+                                    <span class="scan-label">Scan</span>
 
                                 </button>
 
@@ -223,20 +224,22 @@
                 </div>
 
                 <hr />
-                <button type="submit"
-                        name="action"
-                        value="save"
-                        class="btn btn-success">
-                    Save
-                </button>
+                <div class="form-actions">
+                    <button type="submit"
+                            name="action"
+                            value="save"
+                            class="btn btn-success">
+                        Save
+                    </button>
 
-                <button type="submit"
-                        name="action"
-                        value="saveprint"
-                        class="btn btn-primary">
-                    Save & Print
-                </button>
-                <a href="/Sale/Index" class="btn btn-secondary">Back</a>
+                    <button type="submit"
+                            name="action"
+                            value="saveprint"
+                            class="btn btn-primary">
+                        Save & Print
+                    </button>
+                    <a href="/Sale/Index" class="btn btn-secondary">Back</a>
+                </div>
             </form>
         </div>
     </div>
@@ -400,11 +403,11 @@
 
         </div>
 
-        <div class="row mt-3 align-items-center">
+        <div class="row mt-3 align-items-center gy-2">
 
             <!-- Quantity Buttons -->
 
-            <div class="col-md-6">
+            <div class="col-6 col-md-6">
 
                 <div class="d-flex align-items-center gap-2">
 
@@ -434,7 +437,7 @@
 
             <!-- Unit -->
 
-            <div class="col-md-3">
+            <div class="col-6 col-md-3">
 
                 <select class="form-select form-select-sm"
                         onchange="changeUnit(${product.id}, this.value)">
@@ -460,7 +463,7 @@
 
             <!-- Total -->
 
-            <div class="col-md-3 text-end">
+            <div class="col-12 col-md-3 text-end">
 
                 <strong class="text-success">
                     ₹${itemTotal.toFixed(2)}
@@ -892,16 +895,16 @@
 
 <style>
     /* ==================================
-       PAGE
-    ================================== */
+           PAGE
+        ================================== */
 
-    .container {
+    .container-fluid {
         max-width: 98% !important;
     }
 
     /* ==================================
-       GLASS CARD
-    ================================== */
+           GLASS CARD
+        ================================== */
 
     .card {
         background: rgba(255,255,255,.08) !important;
@@ -913,8 +916,8 @@
     }
 
     /* ==================================
-       SECTION HEADINGS
-    ================================== */
+           SECTION HEADINGS
+        ================================== */
 
     h2 {
         font-weight: 700;
@@ -927,8 +930,8 @@
     }
 
     /* ==================================
-       INPUTS
-    ================================== */
+           INPUTS
+        ================================== */
 
     .form-control,
     .form-select {
@@ -948,8 +951,8 @@
         }
 
     /* ==================================
-       INPUT GROUP
-    ================================== */
+           INPUT GROUP
+        ================================== */
 
     .input-group-text {
         background: rgba(255,255,255,.12) !important;
@@ -958,8 +961,8 @@
     }
 
     /* ==================================
-       SEARCH RESULTS
-    ================================== */
+           SEARCH RESULTS
+        ================================== */
 
     .list-group-item {
         background: rgba(255,255,255,.08) !important;
@@ -974,8 +977,8 @@
         }
 
     /* ==================================
-       PRODUCT CARDS
-    ================================== */
+           PRODUCT CARDS
+        ================================== */
 
     #selectedProducts .list-group-item {
         background: rgba(255,255,255,.10) !important;
@@ -987,8 +990,8 @@
     }
 
     /* ==================================
-       BUTTONS
-    ================================== */
+           BUTTONS
+        ================================== */
 
     .btn {
         border: none !important;
@@ -1008,9 +1011,15 @@
         box-shadow: 0 8px 20px rgba(108,117,125,.15);
     }
 
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
     /* ==================================
-       MODAL
-    ================================== */
+           MODAL
+        ================================== */
 
     .modal-content {
         background: rgba(255,255,255,.12);
@@ -1026,9 +1035,16 @@
         border: none;
     }
 
+    #reader video,
+    #reader img,
+    #reader canvas {
+        max-width: 100%;
+        height: auto !important;
+    }
+
     /* ==================================
-       ALERTS
-    ================================== */
+           ALERTS
+        ================================== */
 
     .alert {
         border: none;
@@ -1037,8 +1053,8 @@
     }
 
     /* ==================================
-       HR
-    ================================== */
+           HR
+        ================================== */
 
     hr {
         border: none;
@@ -1047,8 +1063,8 @@
     }
 
     /* ==================================
-       PRODUCT SEARCH DROPDOWN
-    ================================== */
+           PRODUCT SEARCH DROPDOWN
+        ================================== */
 
     #searchResult {
         background: transparent;
@@ -1057,11 +1073,51 @@
     }
 
     /* ==================================
-       SCANNER
-    ================================== */
+           SCANNER
+        ================================== */
 
     #reader {
         border-radius: 15px;
         overflow: hidden;
+    }
+
+    /* ==================================
+           RESPONSIVE (mobile / tablet)
+        ================================== */
+
+    @@media (max-width: 767.98px) {
+
+        .page-title {
+            font-size: 1.5rem;
+        }
+
+        .sale-card .card-body {
+            padding: 18px !important;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+
+        .sale-card .card-body {
+            padding: 14px !important;
+        }
+        /* Save / Save & Print / Back stack full-width and easy to
+               tap on phones instead of crowding into one row */
+        .form-actions {
+            flex-direction: column;
+        }
+
+            .form-actions .btn {
+                width: 100%;
+            }
+        /* Icon-only scan button on very narrow screens so it never
+               pushes the search input into an unusable sliver */
+        .scan-label {
+            display: none;
+        }
+
+        #selectedProducts .list-group-item {
+            padding: 14px;
+        }
     }
 </style>
