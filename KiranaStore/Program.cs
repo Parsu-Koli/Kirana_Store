@@ -67,11 +67,9 @@ namespace KiranaStore
 
 
             //Server Connection
-            // builder.Services.AddDbContext<AppDbContext>(options =>
-            //           options.UseNpgsql(
-            //      builder.Configuration.GetConnectionString("DefaultConnection")));
-
-            builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                      options.UseNpgsql(
+                 builder.Configuration.GetConnectionString("DefaultConnection")));
 
             // Repositories
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
