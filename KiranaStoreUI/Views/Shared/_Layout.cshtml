@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
 
     <meta name="google" content="notranslate">
 
@@ -82,8 +82,15 @@
         }
 
         /* ===========================
-                   WHITE GLASS THEME
-                =========================== */
+                           WHITE GLASS THEME
+                        =========================== */
+        html, body {
+            /* Prevent any accidental horizontal scroll on small screens
+                       caused by fixed-width children (dropdowns, dividers, etc.) */
+            overflow-x: hidden;
+            max-width: 100%;
+        }
+
         body {
             min-height: 100vh;
             margin: 0;
@@ -94,8 +101,8 @@
         }
 
         /* ===========================
-                   HEADER
-                =========================== */
+                           HEADER
+                        =========================== */
 
         header {
             position: relative;
@@ -103,8 +110,8 @@
         }
 
         /* ===========================
-                   FIRST NAVBAR
-                =========================== */
+                           FIRST NAVBAR
+                        =========================== */
 
 
 
@@ -117,9 +124,28 @@
             pointer-events: none;
         }
 
+        /* Allow the brand row to shrink and wrap gracefully instead of
+                   forcing full-size logos/text on narrow screens */
+        .navbar-custom .container-fluid {
+            column-gap: 10px;
+            row-gap: 8px;
+        }
+
+        .navbar-brand {
+            min-width: 0; /* allow flex children to shrink below content size */
+        }
+
+            .navbar-brand img {
+                flex-shrink: 0;
+            }
+
+            .navbar-brand span {
+                white-space: nowrap;
+            }
+
         /* ===========================
-                   SECOND NAVBAR
-                =========================== */
+                           SECOND NAVBAR
+                        =========================== */
 
         .navbar-2nd {
             background: rgba(255,255,255,.12);
@@ -129,8 +155,8 @@
         }
 
         /* ===========================
-                   LINKS
-                =========================== */
+                           LINKS
+                        =========================== */
 
         .nav-link {
             color: #1e293b !important;
@@ -145,8 +171,8 @@
             }
 
         /* ===========================
-                   USER PROFILE
-                =========================== */
+                           USER PROFILE
+                        =========================== */
 
         .user-profile {
             background: rgba(255,255,255,.25);
@@ -160,8 +186,8 @@
             }
 
         /* ===========================
-                   DROPDOWN
-                =========================== */
+                           DROPDOWN
+                        =========================== */
 
         .profile-dropdown,
         .dropdown-menu {
@@ -172,6 +198,8 @@
             border-radius: 18px;
             box-shadow: 0 12px 40px rgba(0,0,0,.12);
             z-index: 10000 !important;
+            /* Never let a dropdown push the page wider than the viewport */
+            max-width: calc(100vw - 20px);
         }
 
         .dropdown-item {
@@ -186,8 +214,8 @@
             }
 
         /* ===========================
-                   SUBMENU
-                =========================== */
+                           SUBMENU
+                        =========================== */
 
         .submenu {
             background: rgba(255,255,255,.45);
@@ -199,8 +227,8 @@
         }
 
         /* ===========================
-                   PROFILE AVATAR
-                =========================== */
+                           PROFILE AVATAR
+                        =========================== */
 
         .profile-avatar,
         .profile-avatar-large {
@@ -210,8 +238,8 @@
         }
 
         /* ===========================
-                   BODY CONTAINER
-                =========================== */
+                           BODY CONTAINER
+                        =========================== */
 
         #Body {
             width: 98%;
@@ -225,8 +253,8 @@
         }
 
         /* ===========================
-                   DATE
-                =========================== */
+                           DATE
+                        =========================== */
 
         .navbar-date {
             color: #334155;
@@ -237,89 +265,85 @@
 
         /* Glass Settings */
 
-.glass-settings{
-    width:340px;
-    background:rgba(255,255,255,.55);
-    backdrop-filter:blur(30px);
-    -webkit-backdrop-filter:blur(30px);
-    border:1px solid rgba(255,255,255,.6);
-    border-radius:20px;
-    overflow:hidden;
-    box-shadow:0 20px 45px rgba(0,0,0,.15);
-}
+        .glass-settings {
+            width: 340px;
+            background: rgba(255,255,255,.55);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,.6);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 45px rgba(0,0,0,.15);
+        }
 
-.glass-header{
-    background:linear-gradient(
-        135deg,
-        rgba(255,255,255,.45),
-        rgba(255,255,255,.15)
-    );
-}
+        .glass-header {
+            background: linear-gradient( 135deg, rgba(255,255,255,.45), rgba(255,255,255,.15) );
+        }
 
-.glass-icon{
-    width:60px;
-    height:60px;
-    border-radius:18px;
-    background:linear-gradient(135deg,#4facfe,#00c6fb);
-    color:#fff;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:26px;
-    box-shadow:0 10px 25px rgba(79,172,254,.35);
-}
+        .glass-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: linear-gradient(135deg,#4facfe,#00c6fb);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 10px 25px rgba(79,172,254,.35);
+        }
 
-.glass-language{
-    background:rgba(255,255,255,.35);
-    border:1px solid rgba(255,255,255,.55);
-}
+        .glass-language {
+            background: rgba(255,255,255,.35);
+            border: 1px solid rgba(255,255,255,.55);
+        }
 
-.glass-settings .btn-success{
-    border:none;
-    background:linear-gradient(135deg,#22c55e,#16a34a);
-    box-shadow:0 8px 20px rgba(34,197,94,.35);
-    transition:.3s;
-}
+        .glass-settings .btn-success {
+            border: none;
+            background: linear-gradient(135deg,#22c55e,#16a34a);
+            box-shadow: 0 8px 20px rgba(34,197,94,.35);
+            transition: .3s;
+        }
 
-.glass-settings .btn-success:hover{
-    transform:translateY(-2px);
-    box-shadow:0 12px 25px rgba(34,197,94,.45);
-}
+            .glass-settings .btn-success:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 12px 25px rgba(34,197,94,.45);
+            }
 
-.glass-settings .form-check-input{
-    width:3rem;
-    height:1.5rem;
-    cursor:pointer;
-}
+        .glass-settings .form-check-input {
+            width: 3rem;
+            height: 1.5rem;
+            cursor: pointer;
+        }
 
-.glass-settings .form-check-input:checked{
-    background-color:#22c55e;
-    border-color:#22c55e;
-}
+            .glass-settings .form-check-input:checked {
+                background-color: #22c55e;
+                border-color: #22c55e;
+            }
 
-.glass-settings .form-check-input:focus{
-    box-shadow:none;
-}
+            .glass-settings .form-check-input:focus {
+                box-shadow: none;
+            }
 
-.glass-settings h6{
-    color:#0f172a;
-}
+        .glass-settings h6 {
+            color: #0f172a;
+        }
 
-.glass-settings .text-muted{
-    font-size:.8rem;
-}
+        .glass-settings .text-muted {
+            font-size: .8rem;
+        }
 
-.glass-settings li{
-    transition:.3s;
-}
+        .glass-settings li {
+            transition: .3s;
+        }
 
-.glass-settings li:hover{
-    background:rgba(255,255,255,.18);
-}
+            .glass-settings li:hover {
+                background: rgba(255,255,255,.18);
+            }
 
         /* ===========================
-                   LOGO TEXT
-                =========================== */
+                           LOGO TEXT
+                        =========================== */
 
         .navbar-brand,
         .navbar-brand span {
@@ -327,16 +351,16 @@
         }
 
         /* ===================================
-                   Footer
-                ====================================*/
+                           Footer
+                        ====================================*/
 
         footer {
             margin-top: 20px;
         }
 
         /* ===================================
-                Hide Google Translate Branding
-                =================================== */
+                        Hide Google Translate Branding
+                        =================================== */
 
         .goog-te-banner-frame.skiptranslate,
         iframe.skiptranslate {
@@ -360,11 +384,12 @@
 
 
         /* ===================================
-           Transparent Google Translate
-        ===================================*/
+                   Transparent Google Translate
+                ===================================*/
 
         .goog-te-combo {
             width: 130px !important;
+            max-width: 100%;
             padding: 4px 6px !important;
             background: transparent !important;
             border: none !important;
@@ -471,8 +496,8 @@
         }
 
         /* ===================================
-                   Responsive tweaks (mobile / tablet)
-                ===================================*/
+                           Responsive tweaks (mobile / tablet)
+                        ===================================*/
 
         @@media (max-width: 991.98px) {
 
@@ -482,8 +507,8 @@
             }
 
             .navbar-nav.mb-lg-0 {
-                width: 100%;
-                justify-content: flex-end;
+                width: auto;
+                align-items: flex-end;
             }
 
             .navbar-2nd .navbar-nav {
@@ -493,6 +518,46 @@
             #Body {
                 width: 96%;
                 padding: 15px;
+            }
+            /* Give second-navbar links breathing room and bigger tap
+                       targets once they're stacked vertically inside the
+                       collapsed menu */
+            .navbar-2nd .nav-link {
+                padding: 10px 12px !important;
+            }
+
+            .navbar-2nd .navbar-nav.text-success {
+                margin-top: 6px;
+                border-top: 1px solid rgba(0,0,0,.08);
+                padding-top: 8px;
+            }
+
+            .navbar-date {
+                padding-right: 0;
+            }
+        }
+
+        @@media (max-width: 767.98px) {
+            /* Shrink the branding block so two logos + text fit
+                       comfortably next to the profile control */
+            .navbar-brand img {
+                height: 34px !important;
+            }
+
+            .navbar-brand span {
+                font-size: 12px !important;
+            }
+
+                .navbar-brand span small {
+                    font-size: 10px !important;
+                }
+
+            .user-profile .fw-semibold {
+                font-size: 14px;
+            }
+
+            .user-profile small {
+                font-size: 11px;
             }
         }
 
@@ -507,8 +572,8 @@
                 max-width: 320px;
             }
             /* Submenus can't rely on hover on touch screens, and
-                       a side-flyout submenu can run off-screen on narrow
-                       viewports, so stack it under its parent instead. */
+                               a side-flyout submenu can run off-screen on narrow
+                               viewports, so stack it under its parent instead. */
             .submenu {
                 position: static !important;
                 box-shadow: none;
@@ -516,10 +581,73 @@
                 margin: 6px 0 0 0 !important;
                 border-radius: 10px;
             }
+            /* Trim the branding row further so it never wraps mid-word
+                       or forces horizontal scroll on small phones */
+            .navbar-custom .container-fluid > .d-flex.align-items-center.flex-wrap {
+                gap: 6px;
+            }
+
+            .navbar-brand img {
+                height: 28px !important;
+                margin-right: 6px !important;
+            }
+            /* Hide the small "IT Solution" tagline and the vertical
+                       divider on very small screens to save horizontal space */
+            .navbar-brand small {
+                display: none;
+            }
+
+            .navbar-brand + .navbar-brand {
+                margin-left: 0;
+            }
+
+            div[style*="width:2px"] {
+                display: none;
+            }
+
+            .profile-avatar {
+                width: 26px;
+                height: 26px;
+                font-size: 16px;
+            }
+            /* Collapse the name/role text next to the avatar so the
+                       profile control never overflows the header on phones */
+            .user-profile .ms-2 {
+                max-width: 90px;
+                overflow: hidden;
+            }
+
+                .user-profile .ms-2 .fw-semibold {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .user-profile .ms-2 small {
+                    display: none;
+                }
+
+            #Body {
+                width: 94%;
+                padding: 12px;
+                border-radius: 16px;
+            }
+
+            .glass-footer {
+                width: 94%;
+            }
+        }
+
+        @@media (max-width: 400px) {
+            /* On the smallest phones, only keep the primary
+                       "Kirana Store" brand visible to avoid crowding */
+            .navbar-brand:first-of-type {
+                display: none;
+            }
         }
 
         /* Click-to-open submenu state (used on touch devices via JS,
-                   works alongside the existing hover behaviour on desktop) */
+                           works alongside the existing hover behaviour on desktop) */
         .dropdown-submenu.show > .submenu {
             display: block;
             animation: fadeIn 0.15s ease-in-out;
@@ -527,8 +655,109 @@
 
 
         /* ===================================
-           Professional Loader
-        ===================================*/
+                   MOBILE SLIDE-IN SIDEBAR (2nd navbar)
+                ===================================*/
+
+        .mobile-nav-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.45);
+            z-index: 10040;
+            opacity: 0;
+            transition: opacity .3s ease;
+        }
+
+            .mobile-nav-backdrop.show {
+                display: block;
+                opacity: 1;
+            }
+
+        /* Custom hamburger — visible by default without relying on
+           Bootstrap's navbar-light/navbar-dark icon classes */
+        .navbar-toggler.custom-toggler {
+            border: none;
+            background: transparent;
+            box-shadow: none !important;
+            padding: 4px 8px;
+            line-height: 1;
+        }
+
+            .navbar-toggler.custom-toggler i {
+                font-size: 28px;
+                color: #198754;
+            }
+
+            .navbar-toggler.custom-toggler:focus {
+                box-shadow: none !important;
+            }
+
+        .mobile-nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(0,0,0,.08);
+            margin-bottom: 8px;
+        }
+
+        @@media (max-width: 991.98px) {
+
+            #navbarNav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 100vh;
+                width: 280px;
+                max-width: 85vw;
+                background: rgba(255,255,255,.98);
+                backdrop-filter: blur(25px);
+                -webkit-backdrop-filter: blur(25px);
+                box-shadow: 8px 0 30px rgba(0,0,0,.15);
+                z-index: 10050;
+                overflow-y: auto;
+                padding: 0 12px 20px 12px;
+                transform: translateX(-100%);
+                transition: transform .3s ease;
+                display: block;
+            }
+
+                #navbarNav.show-mobile {
+                    transform: translateX(0);
+                }
+
+                #navbarNav .navbar-nav {
+                    width: 100%;
+                }
+
+                #navbarNav .nav-link {
+                    padding: 12px 10px !important;
+                    border-bottom: 1px solid rgba(0,0,0,.05);
+                }
+        }
+
+        @@media (min-width: 992px) {
+
+            #navbarNav {
+                position: static;
+                height: auto;
+                width: auto;
+                max-width: none;
+                background: transparent;
+                box-shadow: none;
+                transform: none;
+                padding: 0;
+                overflow: visible;
+            }
+
+            .mobile-nav-backdrop {
+                display: none !important;
+            }
+        }
+
+        /* ===================================
+                   Professional Loader
+                ===================================*/
 
         #loader-container {
             position: fixed;
@@ -646,9 +875,9 @@
 </head>
 
 @{
-    var username = Context.Session.GetString("Username");
-    var role = Context.Session.GetString("Role");
-    var isLoggedIn = !string.IsNullOrEmpty(username);
+        var username = Context.Session.GetString("Username");
+        var role = Context.Session.GetString("Role");
+        var isLoggedIn = !string.IsNullOrEmpty(username);
 }
 
 <body>
@@ -713,7 +942,7 @@
 
                 <!-- Right Side -->
 
-                <ul class="navbar-nav mb-lg-0">
+                <ul class="navbar-nav mb-lg-0 ms-auto">
 
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -952,20 +1181,30 @@
 
                 @if (isLoggedIn)
                 {
-                    <button class="navbar-toggler" type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#navbarNav"
+                    <button class="navbar-toggler custom-toggler" type="button"
+                            id="mobileNavToggle"
                             aria-controls="navbarNav"
                             aria-expanded="false"
                             aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
+                        <i class="bi bi-list"></i>
                     </button>
                 }
 
-                <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Dark overlay behind the sliding sidebar (mobile only) -->
+                <div class="mobile-nav-backdrop" id="mobileNavBackdrop"></div>
+
+                <div class="navbar-collapse" id="navbarNav">
 
                     @if (isLoggedIn)
                     {
+                        <!-- Sidebar header, visible only on mobile -->
+                        <div class="mobile-nav-header d-lg-none">
+                            <span class="fw-bold text-success">
+                                <i class="bi bi-list me-2"></i>Menu
+                            </span>
+                            <button type="button" class="btn-close" id="mobileNavClose" aria-label="Close"></button>
+                        </div>
+
                         <ul class="navbar-nav me-auto align-items-lg-center">
 
                             <!-- Dashboard -->
@@ -1205,6 +1444,66 @@
 
     </script>
 
+    <script>
+
+        // =====================================
+        // MOBILE SLIDE-IN SIDEBAR (2nd navbar)
+        // =====================================
+
+        (function () {
+
+            const toggleBtn = document.getElementById("mobileNavToggle");
+            const closeBtn = document.getElementById("mobileNavClose");
+            const backdrop = document.getElementById("mobileNavBackdrop");
+            const sidebar = document.getElementById("navbarNav");
+
+            if (!toggleBtn || !sidebar) return;
+
+            function openSidebar() {
+                sidebar.classList.add("show-mobile");
+                backdrop.classList.add("show");
+                document.body.style.overflow = "hidden";
+                toggleBtn.setAttribute("aria-expanded", "true");
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove("show-mobile");
+                backdrop.classList.remove("show");
+                document.body.style.overflow = "";
+                toggleBtn.setAttribute("aria-expanded", "false");
+            }
+
+            toggleBtn.addEventListener("click", function () {
+                if (sidebar.classList.contains("show-mobile")) {
+                    closeSidebar();
+                } else {
+                    openSidebar();
+                }
+            });
+
+            if (closeBtn) closeBtn.addEventListener("click", closeSidebar);
+            if (backdrop) backdrop.addEventListener("click", closeSidebar);
+
+            // Auto-close after tapping a nav link on mobile
+            sidebar.querySelectorAll(".nav-link").forEach(function (link) {
+                link.addEventListener("click", function () {
+                    if (window.innerWidth < 992) {
+                        closeSidebar();
+                    }
+                });
+            });
+
+            // Reset sidebar state if the window grows to desktop width
+            window.addEventListener("resize", function () {
+                if (window.innerWidth >= 992) {
+                    closeSidebar();
+                }
+            });
+
+        })();
+
+    </script>
+
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <!-- ===================================
@@ -1282,7 +1581,7 @@
                 });
 
         });
-          
+
 
         let gstId = 0;
 
@@ -1329,7 +1628,7 @@
 
         });
 
-   
+
 
     </script>
 

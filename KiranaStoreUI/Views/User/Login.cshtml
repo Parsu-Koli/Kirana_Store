@@ -21,6 +21,10 @@
 
     <style>
 
+        html, body {
+            overflow-x: hidden;
+        }
+
         body {
             min-height: 100vh;
             background: radial-gradient(circle at top left, rgba(59,130,246,.20), transparent 35%), radial-gradient(circle at top right, rgba(236,72,153,.15), transparent 30%), radial-gradient(circle at bottom, rgba(16,185,129,.20), transparent 35%), #eef4ff;
@@ -28,6 +32,8 @@
             justify-content: center;
             align-items: center;
             font-family: 'Segoe UI', sans-serif;
+            padding: 16px;
+            box-sizing: border-box;
         }
 
         .welcome-title {
@@ -57,6 +63,9 @@
 
         .login-card {
             width: 850px;
+            /* ✅ Never exceed the viewport — prevents horizontal overflow
+                       on tablets/small laptops between 768px and 850px wide */
+            max-width: calc(100vw - 32px);
             border-radius: 28px;
             overflow: hidden;
             background: rgba(255,255,255,.75);
@@ -253,18 +262,50 @@
                     text-decoration: underline;
                 }
 
-        @@media(max-width:768px) {
+        /* ============================
+                   RESPONSIVE BREAKPOINTS
+                   ============================ */
+        @@media (max-width: 768px) {
 
             .left-side {
                 display: none;
             }
 
             .login-card {
-                width: 95%;
+                width: 100%;
+                max-width: 480px;
             }
 
             .right-side {
                 padding: 35px 22px;
+            }
+        }
+
+        @@media (max-width: 420px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .login-card {
+                border-radius: 20px;
+            }
+
+            .right-side {
+                padding: 28px 18px;
+            }
+
+            .welcome-title {
+                font-size: 22px;
+            }
+
+            .welcome-subtitle {
+                font-size: 13px;
+                margin-bottom: 20px;
+            }
+
+            .login-btn {
+                height: 48px;
             }
         }
 
@@ -330,7 +371,7 @@
                     <div class="welcome-subtitle">
                         Login to continue your account
                     </div>
-            
+
                     <!-- Validation -->
                     @if (!ViewData.ModelState.IsValid)
                     {
@@ -451,11 +492,13 @@
              class="alert alert-danger alert-dismissible fade show position-fixed"
              role="alert"
              style="
-                top:20px;
-                right:20px;
-                z-index:9999;
-                min-width:300px;
-                box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+                    top:20px;
+                    right:20px;
+                    left:20px;
+                    z-index:9999;
+                    max-width:400px;
+                    margin-left:auto;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.15);">
 
             <i class="bi bi-exclamation-triangle-fill me-2"></i>
 

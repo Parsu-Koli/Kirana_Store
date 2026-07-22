@@ -4,14 +4,14 @@
     ViewData["Title"] = "Edit Sale";
 }
 
-<div class="container-fluid mt-4">
+<div class="container-fluid px-3 px-md-4 mt-4">
 
     <h2 class="page-title text-warning">
-        ✏️ Edit Sale & Customer
+        ✏️ Edit Sale &amp; Customer
     </h2>
 
     <div class="glass-card">
-        <div class="p-4">
+        <div class="p-3 p-md-4">
 
             <form asp-action="Edit" method="post" id="saleForm">
 
@@ -21,10 +21,10 @@
 
                 <div asp-validation-summary="All" class="alert alert-danger"></div>
 
-                <div class="row">
+                <div class="row g-3">
 
                     <!-- SALE DETAILS -->
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <h4 class="text-primary mb-3">Sale Details</h4>
 
                         <div class="mb-3">
@@ -77,27 +77,26 @@
 
 
                     <!-- CUSTOMER DETAILS -->
-                    <div class="col-md-6">
+                    <div class="col-12 col-md-6">
                         <div class="glass-section">
-                        <h4 class="text-primary mb-3">Customer Details</h4>
-                        <input type="hidden" asp-for="Sale.CustomerId" />
+                            <h4 class="text-primary mb-3">Customer Details</h4>
+                            <input type="hidden" asp-for="Sale.CustomerId" />
 
+                            <div class="mb-3">
+                                <label class="fw-bold">Customer Name</label>
+                                <input asp-for="Customer.Name"
+                                       class="form-control"
+                                       required />
+                            </div>
 
-                        <div class="mb-3">
-                            <label class="fw-bold">Customer Name</label>
-                            <input asp-for="Customer.Name"
-                                   class="form-control"
-                                   required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="fw-bold">Phone</label>
-                            <input asp-for="Customer.Phone"
-                                   class="form-control"
-                                   required />
+                            <div class="mb-3">
+                                <label class="fw-bold">Phone</label>
+                                <input asp-for="Customer.Phone"
+                                       class="form-control"
+                                       required />
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
 
                 <hr />
@@ -105,61 +104,65 @@
                 <!-- SALE ITEMS -->
                 <h5 class="fw-bold mb-3">Sale Items</h5>
 
-                <table class="table table-bordered align-middle">
-                    <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th width="120">Qty</th>
-                            <th width="120">Price</th>
-                            <th width="140">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Sale.SaleItems.Count; i++)
-                        {
+                <!-- ✅ TABLE WRAPPED FOR HORIZONTAL SCROLL ON SMALL SCREENS -->
+                <div class="table-responsive sale-items-wrap">
+                    <table class="table table-bordered align-middle mb-0">
+                        <thead>
                             <tr>
-                                <td>
-                                    @Model.Sale.SaleItems[i].Product?.ProductName
-
-                                    <input type="hidden" asp-for="Sale.SaleItems[i].SaleItemId" />
-                                    <input type="hidden" asp-for="Sale.SaleItems[i].ProductId" />
-                                </td>
-
-                                <!-- ✅ FIXED QUANTITY -->
-                                <td>
-                                    <input asp-for="Sale.SaleItems[i].Quantity"
-                                           type="number"
-                                           step="0.001"
-                                           min="0.001"
-                                           class="form-control qty text-end"
-                                           required />
-                                </td>
-
-                                <!-- PRICE -->
-                                <td>
-                                    <input asp-for="Sale.SaleItems[i].Price"
-                                           type="number"
-                                           step="0.01"
-                                           min="0"
-                                           class="form-control price text-end"
-                                           required />
-                                </td>
-
-                                <td>
-                                    <input asp-for="Sale.SaleItems[i].Total"
-                                           class="form-control row-total text-end"
-                                           readonly />
-                                </td>
+                                <th>Product</th>
+                                <th width="120">Qty</th>
+                                <th width="120">Price</th>
+                                <th width="140">Total</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @for (int i = 0; i < Model.Sale.SaleItems.Count; i++)
+                            {
+                                <tr>
+                                    <td data-label="Product">
+                                        @Model.Sale.SaleItems[i].Product?.ProductName
 
-                <div class="mt-4">
+                                        <input type="hidden" asp-for="Sale.SaleItems[i].SaleItemId" />
+                                        <input type="hidden" asp-for="Sale.SaleItems[i].ProductId" />
+                                    </td>
+
+                                    <!-- ✅ FIXED QUANTITY -->
+                                    <td data-label="Qty">
+                                        <input asp-for="Sale.SaleItems[i].Quantity"
+                                               type="number"
+                                               step="0.001"
+                                               min="0.001"
+                                               class="form-control qty text-end"
+                                               required />
+                                    </td>
+
+                                    <!-- PRICE -->
+                                    <td data-label="Price">
+                                        <input asp-for="Sale.SaleItems[i].Price"
+                                               type="number"
+                                               step="0.01"
+                                               min="0"
+                                               class="form-control price text-end"
+                                               required />
+                                    </td>
+
+                                    <td data-label="Total">
+                                        <input asp-for="Sale.SaleItems[i].Total"
+                                               class="form-control row-total text-end"
+                                               readonly />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- END TABLE WRAP -->
+
+                <div class="mt-4 d-flex flex-column flex-sm-row gap-2">
                     <button type="submit" class="btn btn-warning px-4">
                         Update Sale
                     </button>
-                    <a asp-action="Index" class="btn btn-secondary px-4 ms-2">
+                    <a asp-action="Index" class="btn btn-secondary px-4">
                         Back
                     </a>
                 </div>
@@ -254,7 +257,7 @@
         .table th {
             background: rgba(255,255,255,.15);
             border: none !important;
-            backdrop-filter: blur(10px);
+            white-space: nowrap;
         }
 
         .table td {
@@ -276,5 +279,77 @@
         font-size: 30px;
         font-weight: 700;
         margin-bottom: 25px;
+    }
+
+    /* ============================
+           RESPONSIVE TABLE WRAP
+           ============================ */
+    .sale-items-wrap {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+        .sale-items-wrap table {
+            min-width: 480px;
+        }
+
+    /* ============================
+           RESPONSIVE BREAKPOINTS
+           ============================ */
+    @@media (max-width: 991.98px) {
+        .page-title {
+            font-size: 24px;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .container-fluid {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+
+        .page-title {
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .glass-card {
+            border-radius: 16px;
+            padding: 4px;
+        }
+
+        .glass-section {
+            padding: 14px;
+        }
+
+        h4, h5 {
+            font-size: 16px;
+        }
+
+        .table th,
+        .table td {
+            font-size: 13px;
+            padding: 8px 6px;
+        }
+
+        .mt-4 .btn {
+            width: 100%;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .page-title {
+            font-size: 18px;
+        }
+
+        .form-control,
+        .form-select {
+            font-size: 14px;
+        }
+
+        .sale-items-wrap table {
+            min-width: 420px;
+        }
     }
 </style>
